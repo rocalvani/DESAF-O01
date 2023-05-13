@@ -1,0 +1,16 @@
+<div>
+    Productos: 
+    {{#each products}}
+        <div>
+            <h3>
+                {{this.title}}
+            </h3>
+            <p>
+                {{this.price}}
+            </p>
+            <p>
+                {{this.category}}
+            </p>
+        </div>
+    {{/each}}
+</div>

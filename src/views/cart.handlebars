@@ -1,0 +1,16 @@
+<div class="cart__container">
+{{#each products}}
+    <div class="cart__card">
+        <div>
+            <h2>{{this.product.title}}</h2>
+            <p>{{this.product.category}}</p>
+        </div>
+        <div>
+            <p>{{this.product.quantity}} </p>
+        </div>
+        <div>
+            <p>${{this.product.price}} </p>
+        </div>
+    </div>
+{{/each}}
+</div>

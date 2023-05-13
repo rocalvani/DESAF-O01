@@ -1,0 +1,21 @@
+<div class="chatContainer">
+  <div id="chat">
+    {{#each messages}}
+      <article> <b>{{this.user}}:</b> {{this.message}}</article>
+    {{/each}}
+  </div>
+  <div id="form">
+    <input type="text" id="user" placeholder="introduce un usuario" />
+    <input type="text" id="message" placeholder="introduce un mensaje" />
+    <button id="send">enviar</button>
+
+    {{! POST }}
+    <form action="" method="POST">
+      <input type="text" placeholder="introduce un usuario" name="user"/>
+      <input type="text" placeholder="introduce un mensaje" name="message"/>
+      <button type="submit">enviar</button></form>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/index.js"></script>

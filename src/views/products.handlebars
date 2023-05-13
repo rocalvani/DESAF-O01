@@ -1,0 +1,36 @@
+{{#if isValid}}
+<div>
+    {{#if this.logged}}
+        hi again {{this.user.first_name}} <a href="http://localhost:8080/users/logout">log out</a>
+    {{else}}
+    hi!! you can now <a href="http://localhost:8080/users/login">log in</a> or
+    <a href="http://localhost:8080/users/signup"> sign up</a>
+    {{/if}}
+</div>
+<div class="shop__container">
+    {{#each docs}}
+    <article class="shop__card">
+        <p>{{this.category}} </p>
+        <h3>{{this.title}}</h3>
+        <p>$ {{this.price}} </p>
+        <button>Agregar al carrito</button>
+        <a href="http://localhost:8080/products/{{this._id}}"><button>ver más</button></a>
+    </article>
+    <br/>
+    {{/each}}
+</div>
+<br/>
+<div class="shop__pagination">
+    {{#if hasPrevPage}}
+        <a href={{this.prevLink}}>Anterior</a>
+    {{/if}}
+    &nbsp;
+    {{this.page}}
+    &nbsp;
+     {{#if hasNextPage}}
+        <a href={{this.nextLink}}>Siguiente</a>
+    {{/if}} 
+</div>
+{{else}}
+<h1>No hay estudiantes para mostrar</h1>
+{{/if}}

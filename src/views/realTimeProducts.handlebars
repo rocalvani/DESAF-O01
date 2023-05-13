@@ -1,0 +1,48 @@
+<div>
+<div>
+    <p>Delete a product:</p>
+    <input id="inputId" type="text" placeholder="Introduce un id de producto para borrar">
+    
+   <p>or add a product through POST:</p>
+   <form action="" method="POST">
+            <input type="text" placeholder="name" name="title">
+            <input type="text" placeholder="description" name="description">
+            <input type="number" placeholder="price" name="price">
+            <input type="number" placeholder="stock" name="stock">
+            <input type="text" placeholder="code" name="code">
+            <input type="text" placeholder="thumb" name="thumbnail">
+            <input type="text" placeholder="thumb" name="thumbnail2">
+            <input type="text" placeholder="thumb" name="thumbnail3">
+            <input type="text" placeholder="status" name="status">
+            <input type="text" placeholder="category" name="category">
+            <button type="submit">enviar</button></form>
+
+            <p>or add one through http:</p>
+            <input type="text" id="productTitle" placeholder="introduce un nombre">
+            <input type="number" id="productPrice" placeholder="introduce un precio">
+            <input type="text" id="productCategory" placeholder="introduce una categoría">
+            <button id="productComplete">sumar a la lista</button>
+</div>
+
+<div id="log">
+    <div>{{#each products}}
+        <div>
+            <h3>
+                {{this.title}}
+            </h3>
+            <p>
+                {{this.price}}
+            </p>
+            <p>
+                {{this.category}} with id #{{this.id}}
+            </p>
+        </div>
+    {{/each}}</div>
+</div>
+
+
+</div>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/index.js"></script>

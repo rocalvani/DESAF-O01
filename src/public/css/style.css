@@ -1,0 +1,46 @@
+#form {
+    width: 96%;
+    margin:auto;
+}
+
+#form input {
+    width: 40%;
+}
+
+#form button {
+    width: 14%;
+}
+
+#chat { 
+    height: 40vh;
+    width: 90%;
+    margin: auto;
+    border: 1px solid gray;
+    padding: 3%;
+    overflow: auto;
+}
+
+.shop__container {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.shop__card {
+    aspect-ratio: 1/1;
+    width: 23%;
+    background-color: yellow;
+    margin: 1%;
+}
+
+.shop__pagination {
+    margin: auto;
+    text-align:center;
+}
+
+.cart__card {
+    display: flex;
+}
+
+.cart__card div {
+    width: 25%;
+}
