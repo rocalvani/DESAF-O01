@@ -1,20 +1,10 @@
 import { Router } from "express";
 import { userModel } from "../dao/managers/db/models/users.js";
-import {authToken} from '../../utils.js'
+import {authToken} from '.././utils.js'
 
 const router = Router()
 
 // ENDPOINTS 
-router.get("/", async(req, res) => {
-try {
-    let users = await userModel.find()
-    res.send(users)
-}
-catch (err) {
-    res.send("error")
-}
-})
-
 router.post("/", authToken, async (req,res) => {
 try {
     let {firstName, lastName, email} = req.body;

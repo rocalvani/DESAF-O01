@@ -1,5 +1,5 @@
 import { Router } from "express";
-import productService from "../dao/managers/db/product.service.js";
+import productService from "../dao/managers/db/services/product.service.js";
 import { productModel } from "../dao/managers/db/models/products.js";
 // import ProductManager from "../dao/managers/filesystem/ProductManager.js";
 
@@ -63,64 +63,64 @@ const router = Router();
 //     }
 // });
 
-router.get("/", async (req, res) => {
-  try {
-    let { limit, page, category, sort } = req.query;
-    limit == undefined ? (limit = 10) : (limit = limit);
-    page == undefined ? (page = 1) : (page = page);
-    sort == undefined ? (sort = 1) : (sort = sort);
+// router.get("/", async (req, res) => {
+//   try {
+//     let { limit, page, category, sort } = req.query;
+//     limit == undefined ? (limit = 10) : (limit = limit);
+//     page == undefined ? (page = 1) : (page = page);
+//     sort == undefined ? (sort = 1) : (sort = sort);
 
-    if (category === undefined) {
-      let products = await productModel.paginate(
-        {},
-        { limit: limit, sort: { price: sort }, page: page }
-      );
-      res.send({
-        status: "success",
-        payload: products.docs,
-        totalPages: products.totalPages,
-        prevPage: products.prevPage,
-        nextPage: products.nextPage,
-        page: products.page,
-        hasPrevPage: products.hasPrevPage,
-        hasNextPage: products.hasNextPage,
-        prevLink: products.hasPrevPage
-          ? `http://localhost:8080/api/products?limit=${limit}&page=${products.prevPage}`
-          : null,
-        nextLink: products.hasNextPage
-          ? `http://localhost:8080/api/products?limit=${limit}&page=${products.nextPage}`
-          : null,
-      });
-    } else {
-      let products = await productModel.paginate(
-        { category: category },
-        { limit: limit, sort: { price: sort }, page: page }
-      );
+//     if (category === undefined) {
+//       let products = await productModel.paginate(
+//         {},
+//         { limit: limit, sort: { price: sort }, page: page }
+//       );
+//       res.send({
+//         status: "success",
+//         payload: products.docs,
+//         totalPages: products.totalPages,
+//         prevPage: products.prevPage,
+//         nextPage: products.nextPage,
+//         page: products.page,
+//         hasPrevPage: products.hasPrevPage,
+//         hasNextPage: products.hasNextPage,
+//         prevLink: products.hasPrevPage
+//           ? `http://localhost:8080/api/products?limit=${limit}&page=${products.prevPage}`
+//           : null,
+//         nextLink: products.hasNextPage
+//           ? `http://localhost:8080/api/products?limit=${limit}&page=${products.nextPage}`
+//           : null,
+//       });
+//     } else {
+//       let products = await productModel.paginate(
+//         { category: category },
+//         { limit: limit, sort: { price: sort }, page: page }
+//       );
 
-      res.send({
-        status: "success",
-        payload: products.docs,
-        totalPages: products.totalPages,
-        prevPage: products.prevPage,
-        nextPage: products.nextPage,
-        page: products.page,
-        hasPrevPage: products.hasPrevPage,
-        hasNextPage: products.hasNextPage,
-        prevLink: products.hasPrevPage
-          ? `http://localhost:8080/api/products?limit=${limit}&page=${products.prevPage}`
-          : null,
-        nextLink: products.hasNextPage
-          ? `http://localhost:8080/api/products?limit=${limit}&page=${products.nextPage}`
-          : null,
-      });
-    }
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .send({ error: error, message: "could not obtain resources" });
-  }
-});
+//       res.send({
+//         status: "success",
+//         payload: products.docs,
+//         totalPages: products.totalPages,
+//         prevPage: products.prevPage,
+//         nextPage: products.nextPage,
+//         page: products.page,
+//         hasPrevPage: products.hasPrevPage,
+//         hasNextPage: products.hasNextPage,
+//         prevLink: products.hasPrevPage
+//           ? `http://localhost:8080/api/products?limit=${limit}&page=${products.prevPage}`
+//           : null,
+//         nextLink: products.hasNextPage
+//           ? `http://localhost:8080/api/products?limit=${limit}&page=${products.nextPage}`
+//           : null,
+//       });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res
+//       .status(500)
+//       .send({ error: error, message: "could not obtain resources" });
+//   }
+// });
 
 // router.get("/id/:pid", async (req, res) => {
 //   const product = await productService.find(req.params.pid);

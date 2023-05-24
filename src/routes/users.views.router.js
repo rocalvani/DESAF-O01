@@ -1,6 +1,6 @@
 import {Router} from 'express';
-import { authToken } from '../../utils.js';
-import { passportCall, authorization } from '../../utils.js';
+import { authToken } from '.././utils.js';
+import { passportCall, authorization } from '.././utils.js';
 const router = Router();
 
 router.get('/login', (req, res)=>{

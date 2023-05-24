@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { createHash, generateJWToken } from "../../utils.js";
-import { validPass } from "../../utils.js";
+import { createHash, generateJWToken } from ".././utils.js";
+import { validPass } from ".././utils.js";
 import { userModel } from "../dao/managers/db/models/users.js";
 
 const router = Router();

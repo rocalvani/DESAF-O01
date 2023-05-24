@@ -9,10 +9,10 @@ import { Server, Socket } from "socket.io";
 import FileStore  from "session-file-store";
 import MongoStore from "connect-mongo";
 
-import _dirname from "../utils.js"
+import _dirname from "./utils.js"
 
 import ProductManager from "./dao/managers/filesystem/ProductManager.js";
-import messageService from "./dao/managers/db/message.service.js";
+import messageService from "./dao/managers/db/services/message.service.js";
 import { productModel } from "./dao/managers/db/models/products.js";
 
 
@@ -24,20 +24,27 @@ import usersViewRouter from './routes/users.views.router.js';
 import sessionsRouter from "./routes/sessions.routes.js"
 import githubLoginRouter from "./routes/githubLogin.views.router.js"
 import jwtRouter from './routes/jwt.router.js'
+import productsViewsRouter from './routes/products.views.router.js'
+import cartViewsRouter from './routes/cart.views.router.js'
+
+import config from "./config/config.js";
+import MDBSingleton from "./config/MDBSingleton.js";
 
 const app = express();
 // const fileStore = FileStore(session)
 
-app.use(express.static(_dirname + "/src/public"))
+app.use(express.static(_dirname + "/public"))
 
-const PORT = process.env.port || 8080;
-const db = "mongodb+srv://admin:rocio1@cluster0.facejpa.mongodb.net/Ecommerce"
+// const PORT = process.env.port || 8080;
+// const db = "mongodb+srv://admin:rocio1@cluster0.facejpa.mongodb.net/Ecommerce"
+const db = config.DB
+const PORT = config.port
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
 app.engine('handlebars', handlebars.engine())
-app.set('views', _dirname +"/src/views/")
+app.set('views', _dirname +"/views/")
 app.set('view engine', 'handlebars')
 
 // SESSION VA ANTES DE ROUTERS
@@ -58,19 +65,25 @@ initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
-// ROUTERS
-
+// ROUTER
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
 app.use('/api/users', usersRouter)
-app.use('/', viewRouter)
-app.use('/users',usersViewRouter);
 app.use('/api/sessions',sessionsRouter);
 app.use('/github', githubLoginRouter);
 app.use("/api/jwt", jwtRouter);
 
+// ROUTER VIEWS
+app.use('/', viewRouter)
+app.use('/users',usersViewRouter);
+app.use("/shop", productsViewsRouter)
+app.use("/checkout", cartViewsRouter)
+
 const httpServer = app.listen(PORT, () => {
   console.log(`Este server corre mediante: ${PORT} `)
+
+  // console.log(process.argv)
+  // console.log(config)
 });
 
 // SESSIONS
@@ -120,15 +133,23 @@ socket.on("message", async data => {
 })
 
 // BASE DE DATOS //
-const connectMongoDB = async() => {
-  try {
-    await mongoose.connect(db)
-    console.log("conectado a la base de datos"
-    )
-  } catch (err) {
-    console.log("error")
-    process.exit()
-  }
-}
+// const connectMongoDB = async() => {
+//   try {
+//     await mongoose.connect(db)
+//     console.log("conectado a la base de datos"
+//     )
+//   } catch (err) {
+//     console.log("error")
+//     process.exit()
+//   }
+// }
 
-connectMongoDB()
+const mongoInstance = async () => {
+  try {
+    await MDBSingleton.getInstance()
+  } catch (error) {
+    console.error(error)
+  }
+} 
+
+mongoInstance()
