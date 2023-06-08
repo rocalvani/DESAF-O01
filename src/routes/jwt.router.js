@@ -26,8 +26,8 @@ router.post("/login", async (req, res) => {
 
     // CON COOKIES
     res.cookie("jwtCookieToken", accessToken, {
-      maxAge: 100000,
-      httpOnly: false,
+      maxAge: 120000,
+      httpOnly: true,
     });
     res.send({ message: "successful login" });
   } catch {

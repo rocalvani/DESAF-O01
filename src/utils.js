@@ -43,7 +43,7 @@ export const generateJWToken = (user)=>{
 }
 
 export const authToken = (req, res, next) => {
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers.Authorization;
 
     if(!authHeader){
         return res.status(401).send({error: "User not authenticated or missing token."});
@@ -69,6 +69,7 @@ export const passportCall = (strategy) => {
         })(req, res, next);
     }
 };
+
 
 export const authorization = (role) => {
     return async (req, res, next) => {

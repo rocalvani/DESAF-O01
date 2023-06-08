@@ -28,4 +28,12 @@ router.put("/:id", async (req, res) =>{
     }
 })
 
+router.get ('/:id', async(req,res)=>{
+    try {
+        const user = await userModel.findById(req.params.id)
+        res.send(user)
+    } catch (error) {
+        
+    }
+})
 export default router

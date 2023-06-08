@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import {userModel} from '../dao/managers/db/models/users.js';
 
-import { createHash, generateJWToken, validPass } from '.././utils.js';
+import { authToken, createHash, generateJWToken, validPass } from '.././utils.js';
 import passport from 'passport';
 import { passportCall } from '.././utils.js';
 
@@ -84,10 +84,10 @@ router.get('/githubcallback', passport.authenticate('github', {failureRedirect: 
     const token = generateJWToken(req.session.user)
      // CON COOKIES
      res.cookie("jwtCookieToken", token, {
-        maxAge: 60000,
+        maxAge: 120000,
         httpOnly: false,
       });
-    res.redirect('/products')
+    res.redirect('/api/sessions/current')
 })
 
 router.get('/current', passportCall('jwt'),

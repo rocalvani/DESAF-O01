@@ -1,7 +1,10 @@
 import { Router } from "express";
-import productService from "../dao/managers/db/services/product.service.js";
+import { productService } from "../dao/managers/factory.js";
+// import productService from "../dao/managers/db/services/product.service.js";
 import { productModel } from "../dao/managers/db/models/products.js";
 // import ProductManager from "../dao/managers/filesystem/ProductManager.js";
+
+import { authorization } from "../utils.js";
 
 const router = Router();
 
@@ -17,36 +20,36 @@ const router = Router();
 //   product ? res.send(product) : res.send("nothing to see here");
 // });
 
-// router.post("/", async (req, res) => {
-//   let product = req.body;
-//   const products = await ProductManager.getProducts();
-//   let found = products.find((i) => i.code == product.code);
-//   if (found) {
-//     res.send("This product cannot share a code with another.");
-//   } else if (
-//     product.title == "" ||
-//     product.description == "" ||
-//     product.price == "" ||
-//     product.stock == "" ||
-//     product.code == "" ||
-//     product.status == ""||
-//     product.category == ""
-//   ) {
-//     res.send("This product is incomplete.");
-//   } else {
-//     new ProductManager(
-//       product.title,
-//       product.description,
-//       product.price,
-//       [product.thumbnail, product.thumbnail2, product.thumbnail3],
-//       product.code,
-//       product.stock,
-//       product.status == "false" ? product.status = false : product.status = true,
-//       product.category
-//       ).addProduct();
-//     res.send({ status: "success", product: product });
-//   }
-// });
+router.post("/", authorization('admin'), async (req, res) => {
+  let product = req.body;
+  const products = await ProductManager.getProducts();
+  let found = products.find((i) => i.code == product.code);
+  if (found) {
+    res.send("This product cannot share a code with another.");
+  } else if (
+    product.title == "" ||
+    product.description == "" ||
+    product.price == "" ||
+    product.stock == "" ||
+    product.code == "" ||
+    product.status == ""||
+    product.category == ""
+  ) {
+    res.send("This product is incomplete.");
+  } else {
+    new ProductManager(
+      product.title,
+      product.description,
+      product.price,
+      [product.thumbnail, product.thumbnail2, product.thumbnail3],
+      product.code,
+      product.stock,
+      product.status == "false" ? product.status = false : product.status = true,
+      product.category
+      ).addProduct();
+    res.send({ status: "success", product: product });
+  }
+});
 
 // router.put("/:pid", async (req, res) =>{
 //     ProductManager.updateProduct(req.params.pid, req.body.change, req.body.data)

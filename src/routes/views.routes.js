@@ -7,6 +7,7 @@ import productService from "../dao/managers/db/services/product.service.js";
 import { productModel } from "../dao/managers/db/models/products.js";
 import cartService from "../dao/managers/db/services/cart.service.js";
 import { cartModel } from "../dao/managers/db/models/carts.js";
+import { authorization } from "../utils.js";
 
 import {fork} from 'child_process'
 
@@ -87,7 +88,7 @@ const router = express.Router();
 
 router.get("/chat", async (req, res) => {
   try {
-    let messages = await messageService.getAll();
+    let messages = await messageService.getAll(); 
     res.render("chat", { messages: messages });
   } catch (error) {
     console.error(error);
@@ -95,7 +96,7 @@ router.get("/chat", async (req, res) => {
   }
 });
 
-router.post("/chat", (req, res) => {
+router.post("/chat",  authorization('user'), (req, res) => {
   socketServer.on("connection", async (socket) => {
     try {
       let msg = await messageService.save(req.body);

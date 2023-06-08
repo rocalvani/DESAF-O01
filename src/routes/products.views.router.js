@@ -4,7 +4,7 @@ import { getProduct, getProducts, paginateProducts } from "../controllers/produc
 const router = Router();
 
 router.get('/', paginateProducts)
-// router.get("/", getProducts)
+router.get("/", getProducts)
 router.get('/:pid', getProduct)
 
 export default router

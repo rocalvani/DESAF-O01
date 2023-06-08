@@ -1,9 +1,7 @@
 import { Router } from "express";
-import CartManager from "../dao/managers/filesystem/CartManager.js";
-import ProductManager from "../dao/managers/filesystem/ProductManager.js";
+import { authorization } from "../utils.js";
+
 import cartService from "../dao/managers/db/services/cart.service.js";
-import productService from "../dao/managers/db/services/product.service.js";
-import { cartModel } from "../dao/managers/db/models/carts.js";
 
 const router = Router();
 
@@ -66,7 +64,7 @@ router.post("/", async (req, res) => {
 //   }
 // });
 
-router.post("/:cid/product/:pid", async (req, res) => {
+router.post("/:cid/product/:pid",  authorization('user'), async (req, res) => {
   try {
 
     // DESDE ROUTES 

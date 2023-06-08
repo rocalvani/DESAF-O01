@@ -9,6 +9,9 @@ dotenv.config({
 export default {
     port: process.env.PORT,
     DB: process.env.db,
+    persistence: program.opts().dao,
     adminName: process.env.ADMIN,
-    adminPassword: process.env.ADMIN_PASSWORD
+    adminPassword: process.env.ADMIN_PASSWORD,
+    gmailAccount: process.env.GMAIL_ACCOUNT,
+    gmailAppPassword: process.env.GMAIL_PASSWORD
 }

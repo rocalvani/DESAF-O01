@@ -28,7 +28,9 @@ import productsViewsRouter from './routes/products.views.router.js'
 import cartViewsRouter from './routes/cart.views.router.js'
 
 import config from "./config/config.js";
-import MDBSingleton from "./config/MDBSingleton.js";
+// import MDBSingleton from "./config/MDBSingleton.js";
+
+import cors from 'cors'
 
 const app = express();
 // const fileStore = FileStore(session)
@@ -42,6 +44,7 @@ const PORT = config.port
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+app.use(cors())
 
 app.engine('handlebars', handlebars.engine())
 app.set('views', _dirname +"/views/")
@@ -144,12 +147,12 @@ socket.on("message", async data => {
 //   }
 // }
 
-const mongoInstance = async () => {
-  try {
-    await MDBSingleton.getInstance()
-  } catch (error) {
-    console.error(error)
-  }
-} 
+// const mongoInstance = async () => {
+//   try {
+//     await MDBSingleton.getInstance()
+//   } catch (error) {
+//     console.error(error)
+//   }
+// } 
 
-mongoInstance()
+// mongoInstance()

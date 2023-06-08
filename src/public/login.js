@@ -17,7 +17,7 @@ form.addEventListener('submit',e=>{
             .then(json=>{
                 // localStorage.setItem('authToken', json.jwt);
                 alert("Login realizado con exito!");
-                window.location.replace('/products');
+                window.location.replace('/users');
             });
         } else if (result.status === 401){
             alert("Login invalido revisa tus credenciales!");
