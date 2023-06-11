@@ -5,7 +5,7 @@ export default class productService {
         console.log("Working courses with Database persistence in mongodb");
     }
 
-    static async getAll() {
+    static async get() {
         let products = await productModel.find();
         return products.map(el=>el.toObject());
     }
@@ -29,4 +29,19 @@ export default class productService {
         const result = await productModel.findOne({title: name});
         return result;
     };
+
+    static async update(id, data){
+        let result = await productModel.updateOne(
+            {
+              _id: id,
+            },
+            {
+              $set: {
+                stock: data,
+              },
+            }
+          );
+          return result;
+
+    }
 }

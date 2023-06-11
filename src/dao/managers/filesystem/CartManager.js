@@ -11,7 +11,7 @@ class CartManager {
     this.id;
   }
 
-  async addCart() {
+  async save() {
     if (!fs.existsSync(files)) {
       await fs.promises.mkdir(files, { recursive: true });
       await fs.promises.writeFile(file, JSON.stringify(carts));
@@ -23,7 +23,7 @@ class CartManager {
     await fs.promises.writeFile(file, JSON.stringify(carts));
   }
 
-  static async getCartById(id) {
+  static async find(id) {
     if (!fs.existsSync(files)) {
       console.log("it doesn't exist")
     }

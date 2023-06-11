@@ -4,7 +4,7 @@ import axios from "axios";
 import Item from "./Item";
 
 const URL =
-  process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/shop/";
+  process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/";
 
 const ShopContainer = () => {
   const [shop, setShop] = useState([]);
@@ -12,7 +12,7 @@ const ShopContainer = () => {
   useEffect(() => {
     const getShop = async () => {
       try {
-        let response = await axios(URL);
+        let response = await axios(URL + 'shop/react');
         setShop(response.data);
       } catch (error) {
         console.error(error)
@@ -24,7 +24,7 @@ const ShopContainer = () => {
   return (
     <section className="shop__container">
       {shop.map((el) => {
-        return <Item key={el._id} title={el.title} />;
+        return <Item key={el._id} title={el.title} id={el._id} price={el.price} category={el.category} />;
       })}
     </section>
   );

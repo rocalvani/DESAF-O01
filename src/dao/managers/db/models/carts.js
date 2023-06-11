@@ -3,10 +3,6 @@ import mongoose from "mongoose";
 const cartCollection = "carts";
 
 const cartSchema = new mongoose.Schema({
-  name: String,
-  surname: String,
-  address: String,
-  email: String,
   products: {
     type: [
       {
@@ -22,7 +18,10 @@ const cartSchema = new mongoose.Schema({
     ],
     default: [],
   },
-  user: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+  },
 });
 
 export const cartModel = mongoose.model(cartCollection, cartSchema);

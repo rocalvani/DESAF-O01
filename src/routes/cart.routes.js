@@ -1,46 +1,14 @@
 import { Router } from "express";
-import { authorization } from "../utils.js";
+import { authorization, passportCall } from "../utils.js";
 
 import cartService from "../dao/managers/db/services/cart.service.js";
+import { cartServices } from "../dao/repository/index.js";
 
 const router = Router();
 
-// router.post("/", (req, res) => {
-//   new CartManager([]).addCart();
-//   res.send({ status: "This cart has successfully been created." });
-// });
-
-// router.get("/:cid", async (req, res) => {
-//   let cart = await CartManager.getCartById(req.params.cid);
-//   cart ? res.send(cart.products) : res.send({error: "uh-oh. it doesn't exist"});
-// });
-
-// router.post("/:cid/product/:pid", async (req, res) => {
-//   let cart = await CartManager.getCartById(req.params.cid);
-//   let productById = await ProductManager.getProductById(req.params.pid);
-//  if (productById) {
-//   let inCart = cart.products.find((el) => el.product == productById.id);
-
-//   if (inCart) {
-//     inCart.quantity++;
-//   } else {
-//     let product = {
-//       product: productById.id,
-//       quantity: 1,
-//     };
-//     cart.products.push(product);
-//   }
-//   CartManager.updateCart(req.params.cid, cart.products);
-//   res.send(cart);
-//  } else {
-//   res.send({error: "that's just not a real product."});
-//  }
-
-// });
-
 router.post("/", async (req, res) => {
   try {
-    let result = await cartService.save(req.body);
+    let result = await cartServices.save(req.body);
     res.status(201).send(result);
   } catch (error) {
     console.error(error);
@@ -64,7 +32,10 @@ router.post("/", async (req, res) => {
 //   }
 // });
 
-router.post("/:cid/product/:pid",  authorization('user'), async (req, res) => {
+router.post("/:cid/product/:pid", 
+passportCall('jwt'), 
+authorization('user'),
+  async (req, res) => {
   try {
 
     // DESDE ROUTES 
@@ -77,7 +48,7 @@ router.post("/:cid/product/:pid",  authorization('user'), async (req, res) => {
 
     // DESDE SERVICE
    await cartService.addToCart(req.params.cid, req.params.pid);
-   let cart = await cartService.find(req.params.cid);
+   let cart = await cartServices.find(req.params.cid);
     res.send(cart);
   } catch (error) {
     res.status(500).send({
@@ -98,7 +69,7 @@ router.delete("/:cid/products/:pid", async (req, res) => {
     // await cartService.update(req.params.cid, filter);
 
     // DESDE SERVICE 
-    let result = await cartService.deleteProduct(req.params.cid, req.params.pid)
+    let result = await cartServices.deleteProduct(req.params.cid, req.params.pid)
     res.send({status: "success", msg: "product deleted from this cart.", result: result});
   } catch(error) {
     res.status(500).send({
@@ -110,7 +81,7 @@ router.delete("/:cid/products/:pid", async (req, res) => {
 
 router.delete("/:cid", async (req,res) => {
   try {
-    await cartService.update(req.params.cid, []);
+    await cartServices.update(req.params.cid, []);
     res.send({status: "success", msg: "this cart was emptied."});
   }
   catch(error){ res.status(500).send({
@@ -121,13 +92,13 @@ router.delete("/:cid", async (req,res) => {
 
 router.put ("/:cid/product/:pid", async (req, res) => {
   try {
-    let cart = await cartService.find(req.params.cid)
+    let cart = await cartServices.find(req.params.cid)
     let product = cart.products.find((el) => el.product == req.params.pid)
     let code = product._id
 
     if (product) {
-      let result = await cartService.updateCart(req.params.cid, code, req.body.quantity);
-      cart = await cartService.find(req.params.cid)
+      let result = await cartServices.updateCart(req.params.cid, code, req.body.quantity);
+      cart = await cartServices.find(req.params.cid)
       res.send(cart)
     } else {
     res.status(404).send({msg: 'this is not a product found in cart with id ${cid}'});
@@ -143,7 +114,7 @@ router.put ("/:cid/product/:pid", async (req, res) => {
 
 router.put("/:cid", async (req,res) => {
   try {
-    await cartService.fill(req.params.cid);
+    await cartServices.fill(req.params.cid);
     res.send({status: "success", msg: "this cart was filled."});
   }
   catch (error) {
@@ -153,5 +124,8 @@ router.put("/:cid", async (req,res) => {
     });
   }
 })
+
+
+
 
 export default router;

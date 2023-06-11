@@ -1,10 +1,15 @@
 import { Router } from "express";
-import { getProduct, getProducts, paginateProducts } from "../controllers/products.controller.js";
+import {
+  getProduct,
+  getProducts,
+  paginateProducts,
+} from "../controllers/products.controller.js";
+import { passportCall } from ".././utils.js";
 
 const router = Router();
 
-router.get('/', paginateProducts)
-router.get("/", getProducts)
-router.get('/:pid', getProduct)
+router.get("/", passportCall("jwt"), paginateProducts);
+router.get("/react", getProducts);
+router.get("/:pid", getProduct);
 
-export default router
+export default router;

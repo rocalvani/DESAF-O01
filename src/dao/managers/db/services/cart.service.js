@@ -20,6 +20,11 @@ export default class cartService {
     return result;
   }
 
+  static async findByUser(el) {
+    let result = await cartModel.findOne({user: el})
+    return result
+  }
+
   static async update(id, cart) {
     let result = await cartModel.updateOne(
       {
@@ -57,9 +62,9 @@ export default class cartService {
       },
       {
         $set: { products: [
-          {product: '64443d1ad78c001136218ec4'},
-          {product: '64443d1ad78c001136218ec5'},
-          {product: '64443d1ad78c001136218ec3'},
+          {product: '64443d1ad78c001136218eb2'},
+          {product: '64443d1ad78c001136218eb6'},
+          {product: '64443d1ad78c001136218eb9'},
         ] },
       }
     );
@@ -82,5 +87,13 @@ export default class cartService {
       $pull: {products: {product: pid}}
     });
     return result
+  }
+
+  static async populated(id) {
+    let result = await cartModel
+    .findOne({ _id: id })
+    .populate("products.product")
+    .populate("user");
+return result;
   }
 }

@@ -68,6 +68,9 @@ initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
+// COOKIE PARSER
+app.use(cookieParser('jwtCookieToken'))
+
 // ROUTER
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
@@ -106,7 +109,6 @@ const httpServer = app.listen(PORT, () => {
  export const socketServer = new Server(httpServer)
 
 socketServer.on('connection', socket => {
-  console.log("nuevo cliente conectado")
 
 //  socket.on("id",async id=>{
 //     await ProductManager.deleteProduct(id);

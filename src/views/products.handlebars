@@ -1,7 +1,7 @@
 {{#if isValid}}
 <div>
     {{#if this.logged}}
-        hi again {{this.user.first_name}} <a href="http://localhost:8080/users/logout">log out</a>
+        hi again {{this.user}} <a href="http://localhost:8080/users/logout">log out</a>
     {{else}}
     hi!! you can now <a href="http://localhost:8080/users/login">log in</a> or
     <a href="http://localhost:8080/users/signup"> sign up</a>
@@ -13,7 +13,7 @@
         <p>{{this.category}} </p>
         <h3>{{this.title}}</h3>
         <p>$ {{this.price}} </p>
-        <button>Agregar al carrito</button>
+        <button class="shop__button" id="{{this._id}}">Agregar al carrito</button>
         <a href="http://localhost:8080/shop/{{this._id}}"><button>ver más</button></a>
     </article>
     <br/>

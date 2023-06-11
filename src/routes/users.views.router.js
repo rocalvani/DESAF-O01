@@ -1,6 +1,9 @@
 import {Router} from 'express';
 import { authToken } from '.././utils.js';
 import { passportCall, authorization } from '.././utils.js';
+import { userService } from '../dao/managers/factory.js';
+import UserDTO from '../dao/dto/user.dto.js';
+import { current } from '../controllers/sessions.controller.js';
 
 const router = Router();
 
@@ -9,12 +12,9 @@ router.get('/login', (req, res)=>{
 })
 
 router.get("/",
-    // authToken,
-    passportCall('jwt'), //-> Usando JWT por Cookie usando customCall
-    // authorization('user'),
-    (req, res)=>{
-        res.render("profile",{user: req.user})
-    }
+    passportCall('jwt'), 
+    authorization('user'),
+    current
 )
 
 router.get('/signup', (req, res)=>{
@@ -30,16 +30,5 @@ router.get("/logout", (req, res) => {
     })
   });
   
-  // function auth(req,res,next){
-  // if (!req.session.admin) {
-  // return next()
-  // } else {
-  //   return res.status(403).send("este usuario no está autorizado")
-  // }
-  // }
-  
-  // router.get("/priv", auth, (req, res) => {
-  //   res.send("Welcome to a site only visible for admins")
-  // });
 
 export default router;

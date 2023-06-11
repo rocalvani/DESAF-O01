@@ -1,4 +1,4 @@
-import { ticketModel } from "../models/ticket";
+import { ticketModel } from "../models/ticket.js";
 
 export default class ticketService {
     constructor() {
@@ -10,8 +10,8 @@ export default class ticketService {
         return result;
     }
 
-    static async getTicket(id) {
-        let result = await ticketModel.findById(id)
+    static async getTicketByCode(code) {
+        let result = await ticketModel.findOne({code: code})
         return result;
     }
 }

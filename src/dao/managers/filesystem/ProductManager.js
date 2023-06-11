@@ -19,7 +19,7 @@ class ProductManager {
     this.id;
   }
 
-  async addProduct() {
+  async save() {
     if (!fs.existsSync(files)){await fs.promises.mkdir(files, { recursive: true });
     await fs.promises.writeFile(file, JSON.stringify(products));}
         const productsNew = await ProductManager.getProducts();
@@ -32,7 +32,7 @@ class ProductManager {
       
   }
 
-  static async getProducts() {
+  static async get() {
     
       if (fs.existsSync(file)){
         let string = await fs.promises.readFile(file, "utf-8");
@@ -44,7 +44,7 @@ class ProductManager {
     
   }
 
-  static async getProductById(id) {
+  static async find(id) {
     let string = await fs.promises.readFile(file, "utf-8");
     let content = JSON.parse(string);
     let found = content.find((el) => el.id == id);
@@ -73,7 +73,7 @@ class ProductManager {
     }
   }
 
-  static async deleteProduct(id) {
+  static async delete(id) {
     let string = await fs.promises.readFile(file, "utf-8");
     let content = JSON.parse(string);
     let found = content.find((el) => el.id == id);
