@@ -3,6 +3,7 @@ import { dirname } from 'path'
 import jwt from 'jsonwebtoken'
 import passport from 'passport'
 import bcrypt from "bcrypt"
+import { faker } from '@faker-js/faker'
 
 // import multer from "multer"
 
@@ -80,5 +81,18 @@ export const authorization = (role) => {
         next();}
     }
 };
+
+// FAKER
+
+export const generateProduct = () =>{
+    return {
+        title: faker.commerce.productName(),
+        price: faker.commerce.price(),
+        stock: faker.string.numeric(),
+        id: faker.database.mongodbObjectId(),
+        image: faker.image.url()
+
+    }
+}
 
 export default __dirname

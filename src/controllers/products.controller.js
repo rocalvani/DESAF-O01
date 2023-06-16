@@ -1,13 +1,23 @@
 import {userService } from "../dao/managers/factory.js";
 import { productModel } from "../dao/managers/db/models/products.js";
 import { productServices } from "../dao/repository/index.js";
+import { generateProductErrorInfo } from "../errors/messages/productCreationErrorInfo.message.js";
+import EErrors from "../errors/enums.js";
+import CustomError from "../errors/CustomError.js";
+import { generateServerError } from "../errors/messages/serverError.message.js";
+
 
 export const getProducts = async (req, res) => {
   try {
     let products = await productServices.get();
     res.send(products);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    CustomError.createError({
+      name: "Server error",
+      cause: generateServerError(),
+      message: "Something went wrong on server end.",
+      code: EErrors.DATABASE_ERROR
+    })
   }
 };
 
@@ -54,22 +64,35 @@ export const paginateProducts = async (req, res) => {
       return res.render("products", products);
     }
   } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .send({ error: error, message: "could not obtain resources" });
+    CustomError.createError({
+      name: "Server error",
+      cause: generateServerError(),
+      message: "Something went wrong on server end.",
+      code: EErrors.DATABASE_ERROR
+    })
   }
 };
 
 export const getProduct = async (req, res) => {
   try {
     const product = await productServices.find(req.params.pid);
+    if (!product) {
+      CustomError.createError({
+        name: "product search error",
+        cause: generateProductErrorInfo(),
+        message: "This product couldn't be found",
+        code: EErrors.NOT_FOUND
+      })
+     }
     res.render("product", product);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .send({ error: error, message: "could not obtain resources" });
+    CustomError.createError({
+      name: "Server error",
+      cause: generateServerError(),
+      message: "Something went wrong on server end.",
+      code: EErrors.DATABASE_ERROR
+    })
   }
 };
 
@@ -78,18 +101,42 @@ export const getProduct = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
+    const {title, description, price, thumbnail, code, stock, status} = req.body
+    
+    if (!title || !description || !price || !thumbnail || !code || !status) {
+      CustomError.createError({
+        name: "user creation error",
+        cause: generateProductErrorInfo(),
+        message: "User could not be created.",
+        code: EErrors.INVALID_TYPES_ERROR
+      })
+     }
+
     let result = await productServices.save(req.body);
     res.status(201).send(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: error, message: "couldn't save." });
-  }
+    CustomError.createError({
+      name: "Server error",
+      cause: generateServerError(),
+      message: "Something went wrong on server end.",
+      code: EErrors.DATABASE_ERROR
+    })  }
 }
 
 export const updateProduct = async (req,res) => {
   async (req, res) =>{
-   let result = await productServices.updateProduct(req.params.pid, req.body)
+  try {
+    let result = await productServices.updateProduct(req.params.pid, req.body)
     res.send({ status: "product has been modified"});
+  } catch (error) {
+    CustomError.createError({
+      name: "Server error",
+      cause: generateServerError(),
+      message: "Something went wrong on server end.",
+      code: EErrors.DATABASE_ERROR
+    })
+  }
 }
 }
 
@@ -104,10 +151,23 @@ export const deleteProduct = async (req,res) => {
           status: "success",
           msg: "this product has been successfully deleted",
         });
+      } else {
+        if (!product) {
+          CustomError.createError({
+            name: "product search error",
+            cause: generateProductErrorInfo(),
+            message: "This product couldn't be found",
+            code: EErrors.NOT_FOUND
+          })
+         }
       }
     } catch (error) {
-      console.error(error);
-      res.status(500).send({ error: error, message: "couldn't delete." });
+      CustomError.createError({
+        name: "Server error",
+        cause: generateServerError(),
+        message: "Something went wrong on server end.",
+        code: EErrors.DATABASE_ERROR
+      })
     }
   }
 }

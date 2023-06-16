@@ -3,6 +3,7 @@ import config from "../config/config.js";
 import { v4 as uuidv4 } from 'uuid';
 import { ticketService} from "../dao/managers/factory.js";
 import { cartServices, productServices } from "../dao/repository/index.js";
+import CustomError from "../errors/CustomError.js";
 
 export const getCart = async (req, res) => {
   try {
@@ -13,8 +14,12 @@ export const getCart = async (req, res) => {
         res.render("cart", { products: cart.products })
       : res.send({ error: "uh-oh. it doesn't exist" });
   } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: error, message: "couldn't find this cart" });
+    CustomError.createError({
+      name: "Server error",
+      cause: generateServerError(),
+      message: "Something went wrong on server end.",
+      code: EErrors.DATABASE_ERROR
+    })
   }
 };
 
@@ -71,8 +76,13 @@ export const purchase = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: error, message: "couldn't find this cart" });
-  }
+    CustomError.createError({
+      name: "Server error",
+      cause: generateServerError(),
+      message: "Something went wrong on server end.",
+      code: EErrors.DATABASE_ERROR
+    })
+   }
 };
 
 // MAILING
@@ -97,7 +107,12 @@ const transporter = nodemailer.createTransport({
 
   let result = transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      res.status(400).send({ msg: "Error", payload: error });
+      CustomError.createError({
+        name: "Server error",
+        cause: generateServerError(),
+        message: "Something went wrong on server end.",
+        code: EErrors.DATABASE_ERROR
+      })
     }
     res.send(mailOptions);
   });

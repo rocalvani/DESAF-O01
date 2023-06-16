@@ -1,21 +1,36 @@
 import { userModel } from "../dao/managers/db/models/users.js";
 import { generateJWToken } from "../utils.js";
 import { validPass } from ".././utils.js";
-import { cartService , userService} from "../dao/managers/factory.js";
+import { cartService} from "../dao/managers/factory.js";
 import { createHash} from ".././utils.js";
 import UserDTO from "../dao/dto/user.dto.js";
 import { userServices } from "../dao/repository/index.js";
+import CustomError from "../errors/CustomError.js";
+import { generateDuplicateErrorInfo, generateLogInErrorInfo, generateUserErrorInfo } from "../errors/messages/userCreationError.message.js";
+import EErrors from "../errors/enums.js";
 
 export const logIn = async (req, res) => {
     const { email, password } = req.body;
     try {
       const user = await userServices.find(email)
       if (!user) {
-        return res.status(204).send({ error: "not found" });
-      }
+        CustomError.createError({
+          name: "user logging error",
+          cause: generateLogInErrorInfo(),
+          message: "User does not exist.",
+          code: EErrors.NOT_FOUND
+        })
+       }
   
       if (!validPass) {
-        return res.status(401).send({ error: "no coinciden" });
+        if (!user) {
+          CustomError.createError({
+            name: "user logging error",
+            cause: generateUserErrorInfo(),
+            message: "User does not exist.",
+            code: EErrors.INVALID_TYPES_ERROR
+          })
+         }
       }
       const tokenUser = {
         name: `${user.name}`,
@@ -38,21 +53,36 @@ export const logIn = async (req, res) => {
       }
       res.send({ message: "successful login", user: tokenUser });
     } catch {
-      return res.send({ status: "oops! something went wrong on our end." });
+      CustomError.createError({
+        name: "Server error",
+        cause: generateServerError(),
+        message: "Something went wrong on server end.",
+        code: EErrors.DATABASE_ERROR
+      })
     }
   }
 
   export const signUp = async (req, res) => {
     const { first_name, last_name, email, age, password } = req.body;
   
+ if (!password || !email) {
+  CustomError.createError({
+    name: "user creation error",
+    cause: generateUserErrorInfo({first_name, last_name, email}),
+    message: "User could not be created.",
+    code: EErrors.INVALID_TYPES_ERROR
+  })
+ }
+
     const exists = await userServices.find(email);
     if (exists) {
-      return res
-        .status(401)
-        .send({
-          status: "error",
-          message: "a user registered under this email already exists",
-        });
+      return CustomError.createError({
+          name: "user creation error",
+          cause: generateDuplicateErrorInfo(),
+          message: "User already exists.",
+          code: EErrors.INVALID_TYPES_ERROR
+        })
+       
     }
   
     const user = {

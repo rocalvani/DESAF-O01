@@ -32,6 +32,10 @@ import config from "./config/config.js";
 
 import cors from 'cors'
 
+import compression from "express-compression";
+
+import errorHandler from './errors/index.js'
+
 const app = express();
 // const fileStore = FileStore(session)
 
@@ -45,6 +49,11 @@ const PORT = config.port
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(cors())
+// app.use(compression())
+
+app.use(compression({
+  brotli: {enabled: true, zlib: {}}
+}))
 
 app.engine('handlebars', handlebars.engine())
 app.set('views', _dirname +"/views/")
@@ -85,11 +94,10 @@ app.use('/users',usersViewRouter);
 app.use("/shop", productsViewsRouter)
 app.use("/checkout", cartViewsRouter)
 
+app.use(errorHandler)
+
 const httpServer = app.listen(PORT, () => {
   console.log(`Este server corre mediante: ${PORT} `)
-
-  // console.log(process.argv)
-  // console.log(config)
 });
 
 // SESSIONS
