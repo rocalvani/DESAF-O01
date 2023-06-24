@@ -1,14 +1,15 @@
 
-import '../App.css';
-import LogIn from './LogIn';
-import ShopContainer from './ShopContainer';
+import { Outlet } from 'react-router-dom';
+import '../App.scss';
+import Header from './Header';
+import {ParallaxProvider} from 'react-scroll-parallax'
 
 function App() {
   return (
-    <div className="App">
-      <LogIn />
-      <ShopContainer/>
-    </div>
+    <ParallaxProvider >
+      <Header />
+      <Outlet />
+      </ParallaxProvider>
   );
 }
 

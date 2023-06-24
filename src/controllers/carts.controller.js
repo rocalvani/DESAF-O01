@@ -14,6 +14,9 @@ export const getCart = async (req, res) => {
         res.render("cart", { products: cart.products })
       : res.send({ error: "uh-oh. it doesn't exist" });
   } catch (error) {
+
+    req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
+
     CustomError.createError({
       name: "Server error",
       cause: generateServerError(),
@@ -75,7 +78,8 @@ export const purchase = async (req, res) => {
       res.send({ msg: "This cart has no products available for purchase." });
     }
   } catch (error) {
-    console.error(error);
+    req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
+
     CustomError.createError({
       name: "Server error",
       cause: generateServerError(),
@@ -107,6 +111,9 @@ const transporter = nodemailer.createTransport({
 
   let result = transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
+
+      req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
+      
       CustomError.createError({
         name: "Server error",
         cause: generateServerError(),

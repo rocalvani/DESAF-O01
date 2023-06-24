@@ -14,6 +14,8 @@ export const logIn = async (req, res) => {
     try {
       const user = await userServices.find(email)
       if (!user) {
+        req.logger.warning(`User search failed @ ${req.method} ${req.url}` )
+
         CustomError.createError({
           name: "user logging error",
           cause: generateLogInErrorInfo(),
@@ -23,11 +25,13 @@ export const logIn = async (req, res) => {
        }
   
       if (!validPass) {
+        req.logger.warning(`User credentials were incorrect @ ${req.method} ${req.url}` )
+
         if (!user) {
           CustomError.createError({
             name: "user logging error",
             cause: generateUserErrorInfo(),
-            message: "User does not exist.",
+            message: "Credentials are incorrect.",
             code: EErrors.INVALID_TYPES_ERROR
           })
          }
@@ -51,8 +55,10 @@ export const logIn = async (req, res) => {
       if (!cart) {
         let result = await cartService.save({ user: user._id });
       }
-      res.send({ message: "successful login", user: tokenUser });
+      res.redirect('http://localhost:3000/');
     } catch {
+      req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
+
       CustomError.createError({
         name: "Server error",
         cause: generateServerError(),
@@ -66,6 +72,8 @@ export const logIn = async (req, res) => {
     const { first_name, last_name, email, age, password } = req.body;
   
  if (!password || !email) {
+  req.logger.warning(`User credentials were incorrect @ ${req.method} ${req.url}` )
+
   CustomError.createError({
     name: "user creation error",
     cause: generateUserErrorInfo({first_name, last_name, email}),

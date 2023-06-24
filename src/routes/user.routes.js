@@ -24,8 +24,7 @@ router.put("/:id", async (req, res) =>{
         }
         res.json(user);
     } catch (error) {
-        console.error("Error consultando el usuario con ID: " + userId);
-    }
+        req.logger.fatal(`Server error @ ${req.method} ${req.url}` )    }
 })
 
 router.get ('/:id', async(req,res)=>{

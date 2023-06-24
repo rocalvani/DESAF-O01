@@ -11,7 +11,7 @@ router.post("/", async (req, res) => {
     let result = await cartServices.save(req.body);
     res.status(201).send(result);
   } catch (error) {
-    console.error(error);
+    req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
     res
       .status(500)
       .send({ error: error, message: "couldn't create this cart" });

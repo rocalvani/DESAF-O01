@@ -20,7 +20,7 @@ router.get(`/:word${Regex}`, async (req, res) => {
         }
         res.json(pets)
     } catch (error) {
-        console.error("Error consultando las mascotas");
+        req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
         res.status(500).send({ error: "Error consultando las mascotas", message: error });
     }
 });
@@ -32,7 +32,6 @@ router.get("*", (req, res) => {
 
 //MIDDLEWARE
 router.param("word", async (req, res, next, name) => {
-  console.log("Buscando nombre de mascota con valor " + name);
   try {
       let result = await productService.findByName(name);
       if (!result) {
@@ -42,7 +41,7 @@ router.param("word", async (req, res, next, name) => {
       }
       next();
   } catch (error) {
-      console.error("Error consultando las mascotas");
+    req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
       res.status(500).send({ error: "Error consultando las mascotas", message: error });
   }
 });

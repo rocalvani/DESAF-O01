@@ -1,5 +1,4 @@
 function llamarApi(){
-    console.log("Llamando api users.");
     fetch('api/users/:id',{
         method:'GET',
         headers:{
@@ -12,7 +11,6 @@ function llamarApi(){
             .then(json=>{
             });
         } else if (result.status === 401){
-            console.log(result);
             alert("Login invalido revisa tus credenciales!");
         }
     })

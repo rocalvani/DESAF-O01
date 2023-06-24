@@ -11,12 +11,11 @@ const twilioSMSOptions = {
 export const sendSMS = async (req, res) => {
     // Logica
     try {
-        console.log("Enviando SMS using Twilio account.");
-        console.log(twilioClient);
+        req.logger.info(`Testing Twilio SMS @ ${req.method} ${req.url}` )
         const result = await twilioClient.messages.create(twilioSMSOptions);
         res.send({ message: "Success!", payload: result });
     } catch (error) {
-        console.error("Hubo un problema enviando el SMS usando Twilio.");
+        req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
         res.status(500).send({ error: error });
     }
 }

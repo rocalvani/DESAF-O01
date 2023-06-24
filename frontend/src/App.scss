@@ -1,0 +1,121 @@
+// ----- IMPORTS ----- //
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+// ----- RESET ----- //
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+
+
+// ----- HEADER ----- //
+.header {
+  width: 100%;
+  background-color: white;
+  position: sticky;
+  top: 0;
+  height: 10vh;
+  display: flex;
+  flex-flow: row wrap;
+  z-index:99;
+  li {
+    list-style-type: none;
+  }
+  ul {
+    display: flex;
+    flex-flow: row wrap;
+  }
+  a {
+    color: red;
+  }
+}
+
+// ----- MAIN ----- //
+.main {
+  &__img {
+    background-color: pink;
+    width: 100%;
+    height: 100vh;
+    text-transform:uppercase;
+    text-align:center;
+    z-index: 0;
+    position: relative;
+    overflow:hidden;
+    &--01{
+      position:absolute;
+      left:20%;
+      top: 40%;
+    }
+    &--02{
+      position: absolute;
+      right: 20%;
+      top: 50%;
+    }
+    &--03{
+      position: fixed;
+      left: 50%;
+      top: 0vh;
+      transform: translateX(-50%) translateY(-50%);
+      font-size: 5vh;
+    }
+    &--04{
+      position: absolute;
+      right: 30%;
+      top: 40vh;
+    }
+    &--05{
+      position: absolute;
+      top:60vh;
+      left: 10vw;
+    }
+  }
+}
+
+.newin {
+  z-index: -99;
+  background-color: red;
+  width: 100%;
+  height: 100vh
+}
+
+// ----- DETAIL ----- //
+.detail {
+  width: 100vw;
+  display: flex;
+  flex-flow: row wrap;
+  &__info {
+    width:20%;
+    background-color: pink;
+  }
+  &__img {
+    width: 60%;
+    background-color: red;
+  }
+  &__desc {
+    width: 20%;
+    background-color: yellow;
+  }
+}
+
+.shop__container {
+  display: flex;
+  flex-flow: row wrap;
+
+}
+
+.shop__item {
+  width: 15.6%;
+  padding: 1%;
+  margin: 0.5%;
+  background-color: pink;
+}
+
+.tag{
+  font-size:7pt;
+  text-transform:uppercase;
+}
+
+

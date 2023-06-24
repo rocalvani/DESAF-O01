@@ -10,6 +10,7 @@ export default {
     port: process.env.PORT,
     DB: process.env.db,
     persistence: program.opts().dao,
+    environment: environment,
     adminName: process.env.ADMIN,
     adminPassword: process.env.ADMIN_PASSWORD,
     gmailAccount: process.env.GMAIL_ACCOUNT,

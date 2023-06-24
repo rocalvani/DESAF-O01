@@ -6,7 +6,7 @@ export const renderChat = async (req, res) => {
       let messages = await messageService.getAll(); 
       res.render("chat", { messages: messages });
     } catch (error) {
-      console.error(error);
+      req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
       res.status(500).send({ error: error, message: "Nothing to see here" });
     }
   }
@@ -19,7 +19,7 @@ export const renderChat = async (req, res) => {
         socketServer.emit("messages", chat);
         res.render("chat", { messages: [] });
       } catch (error) {
-        console.error(error);
+        req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
         res.status(500).send({ error: error, message: "Nothing to see here" });
       }
     });

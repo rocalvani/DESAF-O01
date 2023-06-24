@@ -35,6 +35,7 @@ import cors from 'cors'
 import compression from "express-compression";
 
 import errorHandler from './errors/index.js'
+import addLogger from "./config/logger.js";
 
 const app = express();
 // const fileStore = FileStore(session)
@@ -50,6 +51,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 // app.use(compression())
+app.use(addLogger)
 
 app.use(compression({
   brotli: {enabled: true, zlib: {}}
@@ -100,16 +102,18 @@ const httpServer = app.listen(PORT, () => {
   console.log(`Este server corre mediante: ${PORT} `)
 });
 
-// SESSIONS
 
+app.get("/loggerTest", (req, res)=>{
 
-// app.use(session({
-//   store: new fileStore({path: "./sessions", ttl: 40, retries:0}),
-//   secret: "secreto",
-//   resave: false,
-//   saveUninitialized: true
-// }))
-
+  req.logger.debug("Prueba de log level debug!");
+  req.logger.http("Prueba de log level http!");
+  req.logger.info("Prueba de log level info!");
+  req.logger.warning("Prueba de log level warning!");
+  req.logger.error("Prueba de log level error!");
+  req.logger.fatal("Prueba de log level fatal!")
+  
+  res.send("Prueba de logger!");
+});
 
 
 // SOCKET 
@@ -144,25 +148,3 @@ socket.on("message", async data => {
   socketServer.emit("messages", chat)
 })
 })
-
-// BASE DE DATOS //
-// const connectMongoDB = async() => {
-//   try {
-//     await mongoose.connect(db)
-//     console.log("conectado a la base de datos"
-//     )
-//   } catch (err) {
-//     console.log("error")
-//     process.exit()
-//   }
-// }
-
-// const mongoInstance = async () => {
-//   try {
-//     await MDBSingleton.getInstance()
-//   } catch (error) {
-//     console.error(error)
-//   }
-// } 
-
-// mongoInstance()

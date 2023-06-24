@@ -8,10 +8,13 @@ import { generateServerError } from "../errors/messages/serverError.message.js";
 
 
 export const getProducts = async (req, res) => {
+
   try {
     let products = await productServices.get();
     res.send(products);
   } catch (error) {
+    req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
+
     CustomError.createError({
       name: "Server error",
       cause: generateServerError(),
@@ -64,6 +67,9 @@ export const paginateProducts = async (req, res) => {
       return res.render("products", products);
     }
   } catch (error) {
+
+    req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
+
     CustomError.createError({
       name: "Server error",
       cause: generateServerError(),
@@ -77,6 +83,8 @@ export const getProduct = async (req, res) => {
   try {
     const product = await productServices.find(req.params.pid);
     if (!product) {
+      req.logger.warning(`Product search failed @ ${req.method} ${req.url}` )
+
       CustomError.createError({
         name: "product search error",
         cause: generateProductErrorInfo(),
@@ -84,9 +92,10 @@ export const getProduct = async (req, res) => {
         code: EErrors.NOT_FOUND
       })
      }
-    res.render("product", product);
+    res.send(product);
   } catch (error) {
-    console.error(error);
+    req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
+
     CustomError.createError({
       name: "Server error",
       cause: generateServerError(),
@@ -104,6 +113,8 @@ export const createProduct = async (req, res) => {
     const {title, description, price, thumbnail, code, stock, status} = req.body
     
     if (!title || !description || !price || !thumbnail || !code || !status) {
+      req.logger.warning(`Product creation failed @ ${req.method} ${req.url}` )
+
       CustomError.createError({
         name: "user creation error",
         cause: generateProductErrorInfo(),
@@ -115,7 +126,8 @@ export const createProduct = async (req, res) => {
     let result = await productServices.save(req.body);
     res.status(201).send(result);
   } catch (error) {
-    console.error(error);
+    req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
+
     CustomError.createError({
       name: "Server error",
       cause: generateServerError(),
@@ -130,6 +142,9 @@ export const updateProduct = async (req,res) => {
     let result = await productServices.updateProduct(req.params.pid, req.body)
     res.send({ status: "product has been modified"});
   } catch (error) {
+
+    req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
+
     CustomError.createError({
       name: "Server error",
       cause: generateServerError(),
@@ -153,6 +168,8 @@ export const deleteProduct = async (req,res) => {
         });
       } else {
         if (!product) {
+          req.logger.warning(`Product deletion failed @ ${req.method} ${req.url}` )
+
           CustomError.createError({
             name: "product search error",
             cause: generateProductErrorInfo(),
@@ -162,6 +179,8 @@ export const deleteProduct = async (req,res) => {
          }
       }
     } catch (error) {
+      req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
+      
       CustomError.createError({
         name: "Server error",
         cause: generateServerError(),
