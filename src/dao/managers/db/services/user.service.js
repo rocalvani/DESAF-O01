@@ -11,9 +11,44 @@ export default class userService {
 
     }
 
+    static async findByID(el) {
+      let result = await userModel.findById(el)
+      return result;
+    }
+
     static async create(el) {
         let result = await userModel.create(el);
         return result;
     }
+
+    static async update(id, data){
+        let result = await userModel.updateOne(
+            {
+              _id: id,
+            },
+            {
+              $set: {
+                password: data,
+              },
+            }
+          );
+          return result;
+
+    }
+
+    static async upgrade(id, data){
+      let result = await userModel.updateOne(
+          {
+            _id: id,
+          },
+          {
+            $set: {
+              role: data,
+            },
+          }
+        );
+        return result;
+
+  }
 
 }

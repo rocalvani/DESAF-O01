@@ -8,23 +8,25 @@ const URL =
 
 const ShopContainer = () => {
   const [shop, setShop] = useState([]);
+  const [load, setLoad] = useState(false)
 
   useEffect(() => {
     const getShop = async () => {
       try {
         let response = await axios(URL + 'shop/react');
         setShop(response.data);
+        setLoad(true)
       } catch (error) {
         console.error(error)
       }
     };
     getShop();
-  });
+  }, [shop]);
 
   return (
     <section className="shop__container">
       {shop.map((el) => {
-        return <Item key={el._id} title={el.title} id={el._id} price={el.price} category={el.category} />;
+        return <Item key={el._id} product={el} />;
       })}
     </section>
   );

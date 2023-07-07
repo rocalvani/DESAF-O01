@@ -43,6 +43,18 @@ const productSchema = new mongoose.Schema({
     type: String,
     index: true
   },
+  tags: [
+    {
+        tag: {
+            type: String
+        }
+    }
+  ],
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+    required: true
+  },
 });
 
 productSchema.plugin(mongoosePaginate)

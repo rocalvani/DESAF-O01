@@ -1,14 +1,14 @@
 import { Router } from "express";
 import { productService } from "../dao/managers/factory.js";
 
-import { authorization, passportCall } from "../utils.js";
+import { authorization, deny, passportCall } from "../utils.js";
 import { createProduct, deleteProduct, updateProduct} from "../controllers/products.controller.js";
 
 const router = Router();
 
-router.post("/", passportCall('jwt'), authorization('admin'), createProduct);
+router.post("/", passportCall('jwt'), deny("user"), createProduct);
 router.put("/:pid",passportCall('jwt'), authorization('admin'), updateProduct)
-router.delete("/:pid", passportCall('jwt'), authorization('admin'),deleteProduct );
+router.delete("/:pid", passportCall('jwt'), deny('user'),deleteProduct );
 
 
 const Regex = "([a-zA-Z%C3%A1%C3%A9%20]+)"

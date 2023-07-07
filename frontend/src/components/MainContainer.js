@@ -1,11 +1,12 @@
+
 import MainImg from "./MainImg"
 
 const MainContainer = () =>{
 
     return (
-        <div className="main">
+            <div className="main">
             <MainImg />
-            <div className="newin">algo va acá</div>
+            <div className="main__newin">algo va acá</div>
         </div>
     )
 }

@@ -191,6 +191,24 @@ const initializePassport = () => {
     )
   );
 
+  passport.use(
+    'expiration',
+    new JwtStrategy(
+      {
+        jwtFromRequest: ExtractJWT.fromExtractors([expirationExtractor]),
+        secretOrKey: PRIVATE_KEY,
+      },
+      async (jwt_payload, done) => {
+        try {
+          return done(null, jwt_payload.recoveryToken);
+        } catch (error) {
+          console.error(error);
+          return done(error);
+        }
+      }
+    )
+  );
+
   //Funciones de Serializacion y Desserializacion
   passport.serializeUser((user, done) => {
     done(null, user._id);
@@ -210,6 +228,14 @@ const cookieExtractor = (req) => {
   let token = null;
   if (req && req.cookies) {
     token = req.cookies["jwtCookieToken"];
+  }
+  return token;
+};
+
+const expirationExtractor = (req) => {
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies["recoveryToken"];
   }
   return token;
 };

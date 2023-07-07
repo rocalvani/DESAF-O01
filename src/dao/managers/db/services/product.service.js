@@ -21,7 +21,7 @@ export default class productService {
     }
 
     static async delete(el) {
-        let del = await productModel.deleteOne(el);
+        let del = await productModel.deleteOne(el._id);
         return del
     }
 
@@ -44,4 +44,11 @@ export default class productService {
           return result;
 
     }
+
+    static async populated(id) {
+        let result = await productModel
+        .findOne({ _id: id })
+        .populate("owner");
+    return result;
+      }
 }

@@ -111,7 +111,6 @@ const transporter = nodemailer.createTransport({
 
   let result = transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-
       req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
       
       CustomError.createError({

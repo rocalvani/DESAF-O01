@@ -27,4 +27,9 @@ export default class productRepository {
         let result = await this.dao.delete(el);
         return result;
     }
+
+    populated = async (id)=>{
+        let result = this.dao.populated(id)
+        return result;
+      }
 }

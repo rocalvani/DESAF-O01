@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { userModel } from "../dao/managers/db/models/users.js";
 import {authToken} from '.././utils.js'
+import { userService } from '../dao/managers/factory.js';
 
 const router = Router()
 
@@ -35,4 +36,17 @@ router.get ('/:id', async(req,res)=>{
         
     }
 })
+
+router.post("/premium/:uid", async(req, res) =>{
+    const user =  await userService.findByID(req.params.uid)
+  
+    if (user.role === "user") {
+        await userService.upgrade(user._id, "premium")
+    } else {
+        await userService.upgrade(user._id, "user")
+    }
+  
+    res.send({status: "success", msg: "user updated accordingly."})
+  
+  })
 export default router

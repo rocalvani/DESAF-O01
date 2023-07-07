@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { authorization, passportCall } from "../utils.js";
+import { authorization, deny, passportCall } from "../utils.js";
 
 import cartService from "../dao/managers/db/services/cart.service.js";
 import { cartServices } from "../dao/repository/index.js";
+import { productService } from "../dao/managers/factory.js";
 
 const router = Router();
 
@@ -34,22 +35,20 @@ router.post("/", async (req, res) => {
 
 router.post("/:cid/product/:pid", 
 passportCall('jwt'), 
-authorization('user'),
+deny('admin'), 
   async (req, res) => {
   try {
+    let product = await productService.populated(req.params.pid)
 
-    // DESDE ROUTES 
-    // let cart = await cartService.find(req.params.cid);
-    // let product = await productService.find(req.params.pid);
+    if (req.user.email != product.owner.email){
+      await cartService.addToCart(req.params.cid, req.params.pid);
+      let cart = await cartServices.find(req.params.cid);
+       res.send(cart);
+    } else {
+      res.send("you cannot add your own products to your cart.")
+    }
 
-    // await cart.products.push({ product: product });
-    // let newCart = cart.products;
-    // await cartService.update(req.params.cid, newCart);
 
-    // DESDE SERVICE
-   await cartService.addToCart(req.params.cid, req.params.pid);
-   let cart = await cartServices.find(req.params.cid);
-    res.send(cart);
   } catch (error) {
     res.status(500).send({
       error: error,
@@ -57,6 +56,12 @@ authorization('user'),
     });
   }
 });
+
+router.get("/:cid", async (req,res) => {
+  let cart = await cartServices.populated(req.params.cid)
+  res.send(cart)
+})
+
 
 router.delete("/:cid/products/:pid", async (req, res) => {
   try {

@@ -8,6 +8,8 @@ import cookieParser from "cookie-parser";
 import { Server, Socket } from "socket.io";
 import FileStore  from "session-file-store";
 import MongoStore from "connect-mongo";
+import cluster from 'cluster'
+import {cpus} from 'os'
 
 import _dirname from "./utils.js"
 
@@ -36,6 +38,7 @@ import compression from "express-compression";
 
 import errorHandler from './errors/index.js'
 import addLogger from "./config/logger.js";
+import { Console } from "console";
 
 const app = express();
 // const fileStore = FileStore(session)
@@ -103,19 +106,6 @@ const httpServer = app.listen(PORT, () => {
 });
 
 
-app.get("/loggerTest", (req, res)=>{
-
-  req.logger.debug("Prueba de log level debug!");
-  req.logger.http("Prueba de log level http!");
-  req.logger.info("Prueba de log level info!");
-  req.logger.warning("Prueba de log level warning!");
-  req.logger.error("Prueba de log level error!");
-  req.logger.fatal("Prueba de log level fatal!")
-  
-  res.send("Prueba de logger!");
-});
-
-
 // SOCKET 
 
  export const socketServer = new Server(httpServer)
@@ -148,3 +138,14 @@ socket.on("message", async data => {
   socketServer.emit("messages", chat)
 })
 })
+
+
+// if(cluster.isPrimary){
+//   console.log("This is a primary process")
+//   const processes = cpus().length
+//   for (let i = 0; i < processes; i++) {
+//     cluster.fork()
+//   }
+// }else {
+//   console.log("worker")
+// }

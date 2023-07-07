@@ -8,34 +8,34 @@ const URL =
   process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/shop/";
 
 const ItemDetailContainer = () => {
-//   const [carga, setCarga] = useState(false);
+  const [carga, setCarga] = useState(false);
   const [product, setProduct] = useState({});
   const params = useParams();
 
   
+   useEffect(() => {
     const getShop = async () => {
       try { 
         let response = await axios(URL + params.pid);
         setProduct(response.data);
+        setCarga(true)
       } catch (error) {
         console.error(error)
       }
     };
     getShop();
+   }, [product])
  
-
   return (
     <div className="item">
-      {/* {!carga ? (
-        <LoaderContainer msg="estás más cerca que nunca" />
-      ) : ( */}
-        <ItemDetail
-          title={product.title}
-          price={product.price}
-          desc={product.description}
-          // thumbnails={product.thumbnail}
-        />
-      {/* )} */}
+      
+       {!carga ? (
+        "cargando"
+      ) :   <ItemDetail
+      product={product}
+    />
+      }
+  
     </div>
   );
 };

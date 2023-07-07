@@ -75,10 +75,37 @@ export const passportCall = (strategy) => {
 export const authorization = (role) => {
     return async (req, res, next) => {
         if (!req.user) return res.status(401).send("Unauthorized: User not found in JWT"); 
-        if (req.user.admin !== role) {
+        if (req.user.role !== role) {
             return res.status(403).send("Forbidden: El usuario no tiene permisos con este rol."); 
         } else {
         next();}
+    }
+};
+
+export const deny = (role) => {
+    return async (req, res, next) => {
+        if (!req.user) return res.status(401).send("Unauthorized: User not found in JWT"); 
+        if (req.user.role === role) {
+            return res.status(403).send("Forbidden: El usuario no tiene permisos con este rol."); 
+        } else {
+        next();}
+    }
+};
+
+// EXPIRATION DATE FOR RECOVERY TOKEN
+export const expirationJWT = (recoveryToken) => {
+    return jwt.sign({recoveryToken}, PRIVATE_KEY, {expiresIn: '1h'})
+}
+
+export const expirationCall = (strategy) => {
+    return async (req, res, next) => {
+        passport.authenticate(strategy, function (err, token, info) {
+            if (err) return next(err);
+            if (!token) {
+                return res.render("expired")            }
+            req.token = token;
+            next();
+        })(req, res, next);
     }
 };
 

@@ -10,7 +10,7 @@ import { generateServerError } from "../errors/messages/serverError.message.js";
 export const getProducts = async (req, res) => {
 
   try {
-    let products = await productServices.get();
+    let products = await productServices.get()
     res.send(products);
   } catch (error) {
     req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
@@ -82,6 +82,7 @@ export const paginateProducts = async (req, res) => {
 export const getProduct = async (req, res) => {
   try {
     const product = await productServices.find(req.params.pid);
+  
     if (!product) {
       req.logger.warning(`Product search failed @ ${req.method} ${req.url}` )
 
@@ -123,6 +124,19 @@ export const createProduct = async (req, res) => {
       })
      }
 
+     const user = await userService.find(req.user.email)
+
+     const product = {
+      title: title,
+      description: description,
+      price: price,
+      thumbnail: thumbnail,
+      code: code,
+      stock: stock,
+      status: status,
+      owner: user._id
+     }
+
     let result = await productServices.save(req.body);
     res.status(201).send(result);
   } catch (error) {
@@ -155,38 +169,93 @@ export const updateProduct = async (req,res) => {
 }
 }
 
-export const deleteProduct = async (req,res) => {
-  async (req, res) => {
-    try {
-      let result = await productServices.find(req.params.pid);
+// export const deleteProduct = async (req,res) => {
+//   async (req, res) => {
+//     try {
+//       let result = await productServices.find(req.params.pid);
   
-      if (result) {
-        await productServices.delete(result);
-        res.send({
-          status: "success",
-          msg: "this product has been successfully deleted",
-        });
-      } else {
-        if (!product) {
-          req.logger.warning(`Product deletion failed @ ${req.method} ${req.url}` )
+//       if (result) {
+//         await productServices.delete(result);
+//         res.send({
+//           status: "success",
+//           msg: "this product has been successfully deleted",
+//         });
+//       } else {
+//         if (!product) {
+//           req.logger.warning(`Product deletion failed @ ${req.method} ${req.url}` )
 
-          CustomError.createError({
-            name: "product search error",
-            cause: generateProductErrorInfo(),
-            message: "This product couldn't be found",
-            code: EErrors.NOT_FOUND
-          })
-         }
-      }
-    } catch (error) {
-      req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
+//           CustomError.createError({
+//             name: "product search error",
+//             cause: generateProductErrorInfo(),
+//             message: "This product couldn't be found",
+//             code: EErrors.NOT_FOUND
+//           })
+//          }
+//       }
+//     } catch (error) {
+//       req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
       
-      CustomError.createError({
-        name: "Server error",
-        cause: generateServerError(),
-        message: "Something went wrong on server end.",
-        code: EErrors.DATABASE_ERROR
-      })
+//       CustomError.createError({
+//         name: "Server error",
+//         cause: generateServerError(),
+//         message: "Something went wrong on server end.",
+//         code: EErrors.DATABASE_ERROR
+//       })
+//     }
+//   }
+// }
+
+export const deleteProduct = async (req,res) => {
+
+    try {
+      let product = await productServices.populated(req.params.pid);
+      let result = await productServices.find(req.params.pid)
+
+      if (!product) {
+        req.logger.warning(`Product deletion failed @ ${req.method} ${req.url}` )
+
+        CustomError.createError({
+          name: "product search error",
+          cause: generateProductErrorInfo(),
+          message: "This product couldn't be found",
+          code: EErrors.NOT_FOUND
+        })
+       }
+
+       if (req.user.role == "admin") {
+        await productServices.delete(result);
+            res.send({
+              status: "success",
+              msg: "this product has been successfully deleted",
+            });
+  
+       }
+
+       if (req.user.role == "premium") {
+           if (product.owner.email != req.user.email) {
+        res.send({status: "error", msg: "this product does not belong to you, therefore, you cannot delete it."})
+      } else {
+          await productServices.delete(result);
+          res.send({
+            status: "success",
+            msg: "this product has been successfully deleted",
+          });
+
+      }
+       } else {
+        res.send("you require admin credentials to do this.")
+       }
+   
+    } catch (error) {
+      // req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
+      
+      // CustomError.createError({
+      //   name: "Server error",
+      //   cause: generateServerError(),
+      //   message: "Something went wrong on server end.",
+      //   code: EErrors.DATABASE_ERROR
+      // })
+
+      res.send("error")
     }
-  }
 }
