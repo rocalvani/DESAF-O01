@@ -5,11 +5,17 @@ import nodemailer from "nodemailer";
 import config from "../config/config.js";
 import { v4 as uuidv4 } from 'uuid';
 import { userService } from '../dao/managers/factory.js';
+import { userServices } from '../dao/repository/index.js';
 
 const router = Router();
 
 router.get('/login', (req, res)=>{
     res.render("login");
+})
+
+router.get('/user',passportCall("jwt"), async(req,res) => {
+  let user = await userServices.censor(req.user.email)
+  res.send(user)
 })
 
 router.get("/",
@@ -24,12 +30,7 @@ router.get('/signup', (req, res)=>{
 })
 
 router.get("/logout", (req, res) => {
-    req.session.destroy(err  => {
-      if (err) {
-        res.json({error: "error de logout"})
-      }
-      res.render("login")
-    })
+  res.clearCookie("jwtCookieToken").send("borrado");
   });
 
   router.get('/reset', (req,res) => {
@@ -60,7 +61,7 @@ router.get("/logout", (req, res) => {
         from: "uwu" + config.gmailAccount,
         to: email,
         subject: "Reestablecimiento de contraseña",
-        html: '<div><h1>seguí para reestablecer</h1> <a href="http://localhost:8080/users/reset/' + recovery + '">este link</a></div>',
+        html: '<div><h1>seguí para reestablecer</h1> <a href="http://localhost:3000/reset/' + recovery + '">este link</a></div>',
         attachments: [],
       };
     

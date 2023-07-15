@@ -1,0 +1,17 @@
+#Carts
+components: 
+  schemas:
+    Cart:
+      type: object
+      properties:
+        products:
+          type: array
+          description: Lista de propductos a comprar.
+        user: 
+          type: ObjectId
+          description: ID del usuario al que se le atribuye este carrito.
+      example: 
+        products:  [ product: {_id: ObjectId('38934j4n234nn3n')}]
+        user: ObjectId('dfjkg23nn42n3o')
+        
+

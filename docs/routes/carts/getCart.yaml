@@ -1,0 +1,24 @@
+paths:
+  /checkout/{cid}:
+    get:
+      summary: Gets a cart from the database using its ID.
+      tags: 
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Path parameter uses the cart's id
+          required: true
+          type: string
+      responses:
+        "201":
+          description:  Cart has successfully been gotten.
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        "404":
+        descritpion: This cart doesn't exist in the database.
+        "500":
+          description: This cart cannot be gotten.
+      

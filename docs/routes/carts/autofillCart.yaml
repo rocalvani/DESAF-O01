@@ -1,0 +1,17 @@
+paths:
+  /api/{cid}:
+    put:
+      summary: Autofills a cart using its ID.
+      tags: 
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Path parameter uses the cart's id
+          required: true
+          type: string
+      responses:
+        "201":
+          description: This product was successfully modified.
+        "500":
+          description: This product could not be modified.

@@ -1,0 +1,17 @@
+paths:
+  /checkout/{cid}/purchase:
+    get:
+      summary:  Sends an email to the user that purchased the cart.
+      tags: 
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Path parameter uses the cart's id
+          required: true
+          type: string
+      responses:
+        "201":
+          description: The email was successfully sent.
+        "500":
+          description: There was an error on server end.

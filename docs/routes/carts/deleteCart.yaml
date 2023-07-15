@@ -1,0 +1,17 @@
+paths:
+  /api/{cid}:
+    delete:
+      summary: Deletes an existing cart's full list of products using its ID.
+      tags: 
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Path parameter uses the cart's id
+          required: true
+          type: string
+      responses:
+        "201":
+          description: This cart was successfully deleted.
+        "500":
+          description: This cart could not be deleted.

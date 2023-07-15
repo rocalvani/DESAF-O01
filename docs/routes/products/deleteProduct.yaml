@@ -1,0 +1,19 @@
+paths:
+  /api/products/{pid}:
+    delete: 
+      summary: Borra un producto existente en base a la ID enviada por params.
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          description: Path parameter uses the product's id
+          required: true
+          type: string
+      responses:
+        "201":
+          description: This product has successfully been deleted.
+        "400":
+          description: Credentials rejected in the process of deleting this product.
+        "500":
+          description: Something went wrong on server side.

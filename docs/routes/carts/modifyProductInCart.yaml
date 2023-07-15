@@ -1,0 +1,38 @@
+paths:
+  /api/{cid}/{pid}:
+    put:
+      summary: Modifies a product's quantity by id from an existing cart using its ID.
+      tags: 
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Path parameter uses the cart's id
+          required: true
+          type: string
+        - name: pid
+          in: path
+          description: Path parameter uses the product's id
+          required: true
+          type: string 
+      requestBody:
+        required: true
+        content: 
+          application/json:
+           schema: 
+            type: object
+            properties:
+              quantity:
+                type: number
+                example: 4
+      responses:
+        "201":
+          description: This product was successfully modified.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        "404":
+          description: This product could not be found in the cart.
+        "500":
+          description: This product could not be modified.

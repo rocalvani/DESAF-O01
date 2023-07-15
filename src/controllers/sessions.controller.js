@@ -14,6 +14,7 @@ export const logIn = async (req, res) => {
     const { email, password } = req.body;
     try {
       const user = await userServices.find(email)
+
       if (!user) {
         req.logger.warning(`User search failed @ ${req.method} ${req.url}` )
 
@@ -74,6 +75,7 @@ export const logIn = async (req, res) => {
 
   export const signUp = async (req, res) => {
     const { first_name, last_name, email, age, password } = req.body;
+    console.log(req.body)
   
  if (!password || !email) {
   req.logger.warning(`User credentials were incorrect @ ${req.method} ${req.url}` )
@@ -88,7 +90,9 @@ export const logIn = async (req, res) => {
 
     const exists = await userServices.find(email);
     if (exists) {
-      return CustomError.createError({
+      req.logger.warning(`user already exists @ ${req.method} ${req.url}`)
+      res.status(401).send("User already exists")
+      CustomError.createError({
           name: "user creation error",
           cause: generateDuplicateErrorInfo(),
           message: "User already exists.",
@@ -104,7 +108,9 @@ export const logIn = async (req, res) => {
       age,
       password: createHash(password),
     };
+
     const result = await userServices.create(user)
+
     res
       .status(201)
       .send({ status: "success", message: "user has successfully been created" });

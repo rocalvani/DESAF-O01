@@ -1,0 +1,51 @@
+#Products
+components: 
+  schemas:    
+    Product:
+      type: object
+      properties: 
+        _id:
+          type: ObjectId
+          description: ID del producto.
+        title:
+          type: string
+          description: Nombre del producto.
+        description:
+          type: string
+          description: Descripción del producto.
+        price:
+          type: number
+          description: Precio numérico del producto.
+        thumbnail:
+          type: array
+          description: Imágenes pertenecientes al producto.
+        code:
+          type: string
+          description: Código único del producto.
+        stock:
+          type: number
+          description: Stock disponible para el producto.
+        status:
+         type: boolean
+         description: Si se encuentra disponible el producto.
+        category:
+         type: string
+         description: Categoría a la que pertenece el producto.
+        tags:
+          type: array
+          description: Etiquetas que definen al producto.
+        owner:
+          type: string
+          description: Dueño del producto.
+      example:
+        _id: ObjectId('432j4n3j5b32j5n5k')
+        title: La rosa es la de Roz
+        description: Este producto es un esmalte de color rosa...
+        thumbnail: [img01.png, img02.png]
+        code: lreldr01
+        stock: 10
+        status: true
+        category: nail polish
+        tags: [new, rosa]
+        owner: admin
+

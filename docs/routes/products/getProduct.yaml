@@ -1,0 +1,23 @@
+paths:
+  /shop/{pid}:
+    get:
+      summary: Obtiene el producto en base a la ID enviada por params.
+      tags: 
+       - Products
+      parameters:
+        - name: pid
+          in: path
+          description: Path parameter uses the product's id
+          required: true
+          type: string
+      responses: 
+        "201":
+          description: Obtiene satisfactoriamente el producto indicado.
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "400":
+          description: Este producto no se encuentra en la base de datos.
+        "500":
+          description: Error de server.

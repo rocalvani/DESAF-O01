@@ -1,7 +1,9 @@
-const CartItem = () => {
+const CartItem = (el) => {
+    console.log(el)
     return (
         <div>
-            producto
+            nombre:
+            {el.product.title}
         </div>
     )
 }

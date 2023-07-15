@@ -1,0 +1,23 @@
+paths:
+  /api/products/{id}:
+    put:
+      summary: Modifica un producto existente en base a la ID enviada por params.
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content: 
+          application/json:
+           schema: 
+            type: object
+            properties:
+              quantity:
+                type: number
+                example: 4
+      responses:
+        "201":
+          description: Producto modificado satisfactoriamente.
+        "400":
+          description: Este producto no existe en la base de datos.
+        "500":
+          description: Error del lado del server.

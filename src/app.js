@@ -10,6 +10,8 @@ import FileStore  from "session-file-store";
 import MongoStore from "connect-mongo";
 import cluster from 'cluster'
 import {cpus} from 'os'
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUIExpress from "swagger-ui-express"
 
 import _dirname from "./utils.js"
 
@@ -52,13 +54,31 @@ const PORT = config.port
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
-app.use(cors())
+app.use(cors({origin:'http://localhost:3000', 
+credentials:true, }))
 // app.use(compression())
 app.use(addLogger)
 
 app.use(compression({
   brotli: {enabled: true, zlib: {}}
 }))
+
+// SWAGGER SETTING 
+const swaggerOptions = {
+  definition: {
+      openapi: '3.1.0',
+      info: {
+          title: 'UWU API docs',
+          description: 'product and cart docs using swagger'
+      }
+  },
+  apis: [`./docs/**/*.yaml`]
+}
+
+const specs = swaggerJSDoc(swaggerOptions);
+app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
+
+//HANDLEBARS SETTING
 
 app.engine('handlebars', handlebars.engine())
 app.set('views', _dirname +"/views/")

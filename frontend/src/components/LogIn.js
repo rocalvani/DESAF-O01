@@ -1,45 +1,40 @@
+import axios from "axios";
+import { useState } from "react";
+import { useUser } from "../context/UserContext";
 
+const LogIn = () => {
+  const [email, setEmail] = useState();
+  const [password, setPass] = useState();
 
-const URL =
-  process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/";
+  const {logIn} = useUser()
 
-  const login = async(e) =>{
+  const handleLogIn = (e) => {
     e.preventDefault();
-    const data = new FormData(document.getElementById('loginForm'));
-    const obj = {};
-    data.forEach((value,key)=>obj[key]=value);
-    fetch( URL + 'api/jwt/login',{
-        method:'POST',
-        body:JSON.stringify(obj),
-        headers:{
-            'Content-Type':'application/json'
-        }
-    }).then(result=>{
-        if(result.status===200){
-            result.json()
-            .then(json=>{
-                alert("Login realizado con exito!");
-            });
-        } else if (result.status === 401){
-            alert("Login invalido revisa tus credenciales!");
-        }
-    })
-    
-  }
+    logIn(email, password)
+  };
 
-const LogIn = ()=>{
-    return(
-        <div>
-           <form id="loginForm">
+  return (
+    <div className="main__login">
+      <h1>Login</h1>
+      <form id="loginForm">
         <label>Email</label>
-        <input name="email"></input>
-        <br/>
+        <input name="email" onChange={(e) => setEmail(e.target.value)} />
+        <br />
         <label>Contraseña</label>
-        <input name="password"></input>
-        <button onClick={login}>log in</button>
-    </form>
-        </div>
-    )
-}
+        <input name="password" type="password" onChange={(e) => setPass(e.target.value)} />
+        <input type="submit" onClick={handleLogIn} />
+      </form>
+      <p>
+        ¿No estás registrado? <a href="/signup">Regístrate aquí</a>
+      </p>
+      <p>
+        o puedes usar <a href="http://localhost:8080/api/sessions/github"> github!</a>
+      </p>
+      <p>
+        Si te olvidaste la contraseña, seguí <a href="/reset">por acá</a>
+      </p>
+    </div>
+  );
+};
 
 export default LogIn;

@@ -1,0 +1,29 @@
+paths:
+  /checkout/{cid}/purchase:
+    post:
+      summary: Purchases products and creates a ticket.
+      tags: 
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Path parameter uses the cart's id
+          required: true
+          type: string
+      responses:
+        "201":
+          description: This cart was successfully purchased.
+          content: 
+            application/json:
+            schema: 
+             type: object
+             properties:
+              msg:
+                type: string
+                example: error
+              productsLeft:
+                application/json:
+                  schema:
+                  $ref: '#/components/schemas/Cart'
+        "500":
+          description: This cart could not be purchased.

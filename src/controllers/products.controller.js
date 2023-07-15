@@ -7,11 +7,13 @@ import CustomError from "../errors/CustomError.js";
 import { generateServerError } from "../errors/messages/serverError.message.js";
 
 
+// ---------- GET ALL PRODUCTS ---------- //
+
 export const getProducts = async (req, res) => {
 
   try {
     let products = await productServices.get()
-    res.send(products);
+    res.status(201).send(products);
   } catch (error) {
     req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
 
@@ -21,8 +23,11 @@ export const getProducts = async (req, res) => {
       message: "Something went wrong on server end.",
       code: EErrors.DATABASE_ERROR
     })
+    res.status(500).status("Something went wrong on our end.")
   }
 };
+
+// ---------- GET ALL PRODUCTS AND PAGINATE ---------- //
 
 export const paginateProducts = async (req, res) => {
   try {
@@ -39,6 +44,7 @@ export const paginateProducts = async (req, res) => {
         { limit: limit, sort: { price: sort }, page: page, lean: true }
       );
 
+      // DEFINE LINKS FOR PREVIOUS AND NEXT PAGES //
       products.prevLink = products.hasPrevPage
         ? `http://localhost:8080/shop?page=${products.prevPage}`
         : "";
@@ -46,6 +52,8 @@ export const paginateProducts = async (req, res) => {
         ? `http://localhost:8080/shop?page=${products.nextPage}`
         : "";
       products.isValid = !(page <= 0 || page > products.totalPages);
+      
+      // SET USER FOR RENDER OBJECT //
       user ? (products.logged = true) : (products.logged = false);
       products.user = user.first_name;
       res.render("products", products);
@@ -55,6 +63,7 @@ export const paginateProducts = async (req, res) => {
         { limit: limit, sort: { price: sort }, page: page, lean: true }
       );
 
+      // DEFINE LINKS FOR PREVIOUS AND NEXT PAGES //
       products.prevLink = products.hasPrevPage
         ? `http://localhost:8080/shop?page=${products.prevPage}`
         : "";
@@ -62,6 +71,8 @@ export const paginateProducts = async (req, res) => {
         ? `http://localhost:8080/shop?page=${products.nextPage}`
         : "";
       products.isValid = !(page <= 0 || page > products.totalPages);
+      
+      // SET USER FOR RENDER OBJECT //
       user ? (products.logged = true) : (products.logged = false);
       pproducts.user = user.first_name;
       return res.render("products", products);
@@ -79,6 +90,8 @@ export const paginateProducts = async (req, res) => {
   }
 };
 
+// ---------- GET A SINGLE PRODUCT BY ID ---------- //
+
 export const getProduct = async (req, res) => {
   try {
     const product = await productServices.find(req.params.pid);
@@ -92,8 +105,9 @@ export const getProduct = async (req, res) => {
         message: "This product couldn't be found",
         code: EErrors.NOT_FOUND
       })
+      res.status(400).send("Product does not exist in the database.")
      }
-    res.send(product);
+    res.status(201).send(product);
   } catch (error) {
     req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
 
@@ -103,16 +117,18 @@ export const getProduct = async (req, res) => {
       message: "Something went wrong on server end.",
       code: EErrors.DATABASE_ERROR
     })
+    res.status(500).send("Something went wrong on our end.")
   }
 };
 
 
-// MANAGE PRODUCTS
+// ---------- CREATE A PRODUCT ------------ //
 
 export const createProduct = async (req, res) => {
   try {
     const {title, description, price, thumbnail, code, stock, status} = req.body
     
+    // EVALUATE THAT ALL REQUIRED INFO IS RECEIVED //
     if (!title || !description || !price || !thumbnail || !code || !status) {
       req.logger.warning(`Product creation failed @ ${req.method} ${req.url}` )
 
@@ -122,8 +138,11 @@ export const createProduct = async (req, res) => {
         message: "User could not be created.",
         code: EErrors.INVALID_TYPES_ERROR
       })
+
+      res.status(400).send("Not enough information to create a product.")
      }
 
+     // FIND USER AND CREATE PRODUCT OBJECT //
      const user = await userService.find(req.user.email)
 
      const product = {
@@ -147,14 +166,21 @@ export const createProduct = async (req, res) => {
       cause: generateServerError(),
       message: "Something went wrong on server end.",
       code: EErrors.DATABASE_ERROR
-    })  }
+    })  
+  res.status(500).send("Something went wrong on our end.")}
 }
+
+// ---------- MODIFY A PRODUCT ---------- //
 
 export const updateProduct = async (req,res) => {
   async (req, res) =>{
   try {
     let result = await productServices.updateProduct(req.params.pid, req.body)
-    res.send({ status: "product has been modified"});
+    if (!result) {
+      res.status(404).send("This product does not exist")
+    } else {
+      res.status(201).send({ status: "product has been modified"});
+    }
   } catch (error) {
 
     req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
@@ -165,45 +191,12 @@ export const updateProduct = async (req,res) => {
       message: "Something went wrong on server end.",
       code: EErrors.DATABASE_ERROR
     })
+    res.status(500).send("Something went wrong on our end.")
   }
 }
 }
 
-// export const deleteProduct = async (req,res) => {
-//   async (req, res) => {
-//     try {
-//       let result = await productServices.find(req.params.pid);
-  
-//       if (result) {
-//         await productServices.delete(result);
-//         res.send({
-//           status: "success",
-//           msg: "this product has been successfully deleted",
-//         });
-//       } else {
-//         if (!product) {
-//           req.logger.warning(`Product deletion failed @ ${req.method} ${req.url}` )
-
-//           CustomError.createError({
-//             name: "product search error",
-//             cause: generateProductErrorInfo(),
-//             message: "This product couldn't be found",
-//             code: EErrors.NOT_FOUND
-//           })
-//          }
-//       }
-//     } catch (error) {
-//       req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
-      
-//       CustomError.createError({
-//         name: "Server error",
-//         cause: generateServerError(),
-//         message: "Something went wrong on server end.",
-//         code: EErrors.DATABASE_ERROR
-//       })
-//     }
-//   }
-// }
+// ---------- DELETE A PRODUCT ---------- //
 
 export const deleteProduct = async (req,res) => {
 
@@ -211,6 +204,7 @@ export const deleteProduct = async (req,res) => {
       let product = await productServices.populated(req.params.pid);
       let result = await productServices.find(req.params.pid)
 
+      // EVALUATE EXISTENCE OF PRODUCT //
       if (!product) {
         req.logger.warning(`Product deletion failed @ ${req.method} ${req.url}` )
 
@@ -220,42 +214,46 @@ export const deleteProduct = async (req,res) => {
           message: "This product couldn't be found",
           code: EErrors.NOT_FOUND
         })
+        res.status(400).send("This product doesn't exist.")
        }
 
+       // ALLOW ALL ADMINS TO DELETE //
        if (req.user.role == "admin") {
         await productServices.delete(result);
-            res.send({
+            res.status(201).send({
               status: "success",
               msg: "this product has been successfully deleted",
             });
   
        }
-
+       
+       // ALLOW PREMIUM USERS TO ONLY DELETE THEIR OWN PRODUCTS //
        if (req.user.role == "premium") {
            if (product.owner.email != req.user.email) {
-        res.send({status: "error", msg: "this product does not belong to you, therefore, you cannot delete it."})
+        res.status(400).send("this product does not belong to you, therefore, you cannot delete it.")
       } else {
           await productServices.delete(result);
-          res.send({
+          res.status(201).send({
             status: "success",
             msg: "this product has been successfully deleted",
           });
 
       }
        } else {
-        res.send("you require admin credentials to do this.")
+        res.status(400).send("you require admin credentials to do this.")
        }
    
     } catch (error) {
-      // req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
+      req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
       
-      // CustomError.createError({
-      //   name: "Server error",
-      //   cause: generateServerError(),
-      //   message: "Something went wrong on server end.",
-      //   code: EErrors.DATABASE_ERROR
-      // })
+      CustomError.createError({
+        name: "Server error",
+        cause: generateServerError(),
+        message: "Something went wrong on server end.",
+        code: EErrors.DATABASE_ERROR
+      })
 
-      res.send("error")
+      res.status(500).send("error")
     }
 }
+

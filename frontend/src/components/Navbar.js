@@ -1,7 +1,17 @@
 import { NavLink } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 // import CartWidget from "./CartWidget";
 
+const URL =
+process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/users/logout";
+
 const NavBar = () => {
+  const {user, logged, logOut} = useUser()
+
+  const handleLogOut = async() =>{
+  logOut()
+  }
+
   return (
     <div className="header__buttons">
       <NavLink to="/cart">
@@ -11,29 +21,26 @@ const NavBar = () => {
         <ul>
           <li>
             <NavLink to="/">
-              <span className="material-icons">&#xe88a;</span> HOME
+              home
             </NavLink>
           </li>
           <li>
             <NavLink to="/shop">
-              <span className="material-icons">&#xf1cc;</span> SHOP
+              shop
             </NavLink>
           </li>
           <li>
             <NavLink to="/shop/bg">
-              <span className="material-icons">&#xe58e;</span> BGS
+              cat
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/login">
+          {logged  ? <li>welcome back {user} <button onClick={handleLogOut}>
+              LOG OUT
+            </button></li> : <li><NavLink to="/login">
               LOG IN
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/signup">
+            </NavLink> OR  <NavLink to="/signup">
               SIGN UP
-            </NavLink>
-          </li>
+            </NavLink></li> }
         </ul>
       </nav>
     </div>

@@ -1,0 +1,19 @@
+paths:
+  /shop:
+    get: 
+      summary: Obtiene todos los productos.
+      tags: 
+       - Products
+      responses: 
+        "201": 
+          description: Obtiene satisfactoriamente todos los productos de la base de datos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Product'
+        "401":
+          description: Insufficient information to create a product or missing credentials.
+        "500":
+          description: Error del lado del server.

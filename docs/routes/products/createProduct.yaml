@@ -1,0 +1,23 @@
+paths:
+  /api/products:
+    post:
+      summary: Crea un producto nuevo.
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content: 
+          application/json:
+           schema: 
+            $ref: '#/components/schemas/Product'
+      responses:
+        "201":
+          description: Product successfully created.
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "401":
+          description: Insufficient information to create a product or missing credentials.
+        "500":
+          description: There was an error on the server.
