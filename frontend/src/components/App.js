@@ -1,5 +1,5 @@
 import {AnimatePresence} from "framer-motion"
-import { Outlet, useLocation} from 'react-router-dom';
+import { useLocation} from 'react-router-dom';
 import '../App.scss';
 import Header from './Header';
 import {ParallaxProvider} from 'react-scroll-parallax'
@@ -13,9 +13,10 @@ import SignUp from "./SignUp"
 import Reset from "./Reset"
 import ResetForm from "./ResetForm"
 import CartContainer from "./CartContainer";
-
 import UserProvider from "../context/UserContext";
 import { CookiesProvider } from "react-cookie";
+import CartProvider from "../context/CartContext";
+import EmailSent from "./EmailSent"
 
 function App() {
 
@@ -23,7 +24,8 @@ function App() {
 
   return (
     <CookiesProvider>
-    <UserProvider>
+      <UserProvider>
+      <CartProvider>
     <ParallaxProvider >
       <Header />
       <AnimatePresence 
@@ -40,9 +42,13 @@ function App() {
       <Route path="shop" element={<ShopContainer />}/>
       <Route path="shop/:pid" element={<ItemDetailContainer />}/>
       <Route path="checkout/:cid" element={<CartContainer />}/>
+      <Route path="checkout/:cid/purchase" element={<EmailSent />}/>
      </Routes>
       </AnimatePresence>
-      </ParallaxProvider></UserProvider></CookiesProvider>
+      </ParallaxProvider>
+      </CartProvider>
+      </UserProvider>
+      </CookiesProvider>
   );
 }
 

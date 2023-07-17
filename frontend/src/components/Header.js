@@ -1,3 +1,4 @@
+import CartWidget from "./CartWidget";
 import NavBar from "./Navbar";
 import { Link } from "react-router-dom";
 
@@ -10,6 +11,7 @@ const Header = () => {
           <img src="/img/logo.svg" alt="kpoppies" />
         </Link>
       </div>
+      <CartWidget />
     </header>
   );
 };

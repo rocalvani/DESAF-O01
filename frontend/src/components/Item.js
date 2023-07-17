@@ -10,7 +10,7 @@ const Item = ({product}) => {
             <h3 className="shop__itemTitle">{product.title}</h3>
             <p>${product.price} </p>
             <Link to={product._id}>ver más</Link>
-            <AddItemButton id={product._id} />
+            <AddItemButton pid={product._id} />
             
           
     </article>

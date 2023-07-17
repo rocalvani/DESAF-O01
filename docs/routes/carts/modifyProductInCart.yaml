@@ -1,5 +1,5 @@
 paths:
-  /api/{cid}/{pid}:
+  /api/carts/{cid}/product/{pid}:
     put:
       summary: Modifies a product's quantity by id from an existing cart using its ID.
       tags: 

@@ -1,13 +1,21 @@
-
 import axios from "axios";
+import { useUser } from "../context/UserContext";
+import { ServerURL } from "../utils";
 
-const URL =
-  process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/";
+
 
 const AddItemButton = (props) => {
 
+  const {cartID} = useUser()
+
       const addToCart = async() =>{
-    let response = await axios.post(URL + `api/carts/648245c5193359f980866ec0/product/${props.id}`)
+
+        const API = axios.create({
+          baseURL: "http://localhost:8080",
+          withCredentials: true,
+        });
+
+    let response = await API.post(`${ServerURL}api/carts/${cartID}/product/${props.pid}`)
     let cart = response.data
     console.log(cart)
   }

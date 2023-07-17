@@ -32,6 +32,9 @@ export const getCart = async (req, res) => {
 // ---------- ADD PRODUCT TO CART ---------- //
 
 export const addProductToCart = async (req, res) => {
+
+  console.log(req.params)
+
   try {
     let product = await productService.populated(req.params.pid)
 
@@ -41,7 +44,7 @@ export const addProductToCart = async (req, res) => {
       let cart = await cartServices.find(req.params.cid);
        res.status(201).send(cart);
     } else {
-      res.status(400).send({
+      res.status(401).send({
         error: error,
         message: "you cannot add your own products to your cart."
       })
@@ -60,7 +63,6 @@ export const addProductToCart = async (req, res) => {
 
 export const deleteProductFromCart = async (req, res) => {
   try {
-    // DESDE SERVICE 
     let result = await cartServices.deleteProduct(req.params.cid, req.params.pid)
     res.status(201).send({status: "success", msg: "product deleted from this cart.", result: result});
   } catch(error) {
@@ -90,6 +92,7 @@ export const addMoreOf = async (req, res) => {
     let cart = await cartServices.find(req.params.cid)
     let product = cart.products.find((el) => el.product == req.params.pid)
     let code = product._id
+
 
     if (product) {
       let result = await cartServices.updateCart(req.params.cid, code, req.body.quantity);

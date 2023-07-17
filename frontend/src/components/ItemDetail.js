@@ -7,7 +7,7 @@ const ItemDetail = ({product}) => {
       <div className="detail__info">
         <h2>{product.title}</h2>
         <p>${product.price}</p>
-        <AddItemButton />
+        <AddItemButton pid={product._id}/>
         </div>
       <div className="detail__img">
       <img src={"../img/products/" + product.thumbnail[0].img} />

@@ -16,6 +16,7 @@ const UserProvider =({children}) =>{
 
     const [user, setUser] = useState()
     const [logged, setLogged] = useState(false)
+    const [cartID, setCartID] = useState()
    
     const [cookies, setCookie, removeCookie] = useCookies();
 
@@ -28,6 +29,7 @@ const UserProvider =({children}) =>{
       if (onlineData) {
         setLogged(true)
         setUser(onlineData.user)
+        setCartID(onlineData.cart)
       }
 
   }, [logged]);
@@ -44,17 +46,18 @@ const UserProvider =({children}) =>{
       );
       if (response.status === 200) {
         alert("Login realizado con exito!");
-        await setLogged(true)
         
-        let response = await axios(URL + "users/user", {
+        let censoredResult = await axios(URL + "users/user", {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         });
 
-        const userLog = response.data
+        const userLog = censoredResult.data
+        
+      setLogged(true)
       setUser(userLog.name);
-
-      setCookie("onlineUser", {user: userLog.name, logged: logged}, {maxAge: 86400})
+      setCartID(response.data.cart._id)
+      setCookie("onlineUser", {user: userLog.name, logged: logged, cart: response.data.cart._id}, {maxAge: 86400})
         
       } else if (response.status === 401) {
         alert("Login invalido revisa tus credenciales!");
@@ -85,7 +88,7 @@ const UserProvider =({children}) =>{
         logged:logged,
         logIn: logIn,
         logOut: logOut,
-
+        cartID: cartID
     }
 
     return (

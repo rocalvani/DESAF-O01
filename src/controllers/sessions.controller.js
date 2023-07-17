@@ -49,7 +49,7 @@ export const logIn = async (req, res) => {
   
       // CON COOKIES
       res.cookie("jwtCookieToken", accessToken, {
-        maxAge: 1800000,
+        maxAge: 86400000,
         httpOnly: true,
       });
       // CREA CART EN LOGIN
@@ -58,8 +58,10 @@ export const logIn = async (req, res) => {
       if (!cart) {
         let result = await cartService.save({ user: user._id });
       }
+
+      cart = await cartService.findByUser(user._id);
       res.status(200)
-      .send({message: "successful login"})
+      .send({message: "successful login", user: tokenUser, cart: cart})
       // .redirect('http://localhost:3000/shop');
     } catch {
       req.logger.fatal(`Server error @ ${req.method} ${req.url}` )

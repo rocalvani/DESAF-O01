@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ItemDetail from "./ItemDetail";
 import axios from "axios";
+import { ServerURL } from "../utils";
 // import LoaderContainer from "./LoaderContainer";
 
-const URL =
-  process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/shop/";
 
 const ItemDetailContainer = () => {
   const [carga, setCarga] = useState(false);
@@ -16,7 +15,7 @@ const ItemDetailContainer = () => {
    useEffect(() => {
     const getShop = async () => {
       try { 
-        let response = await axios(URL + params.pid);
+        let response = await axios(ServerURL + "shop/" + params.pid);
         setProduct(response.data);
         setCarga(true)
       } catch (error) {

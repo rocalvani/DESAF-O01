@@ -19,7 +19,8 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/:cid/product/:pid", passportCall('jwt'), deny('admin'), addProductToCart);
-router.delete("/:cid/products/:pid", deleteProductFromCart);
+router.post("/:cid/product/:pid/react", addProductToCart);
+router.delete("/:cid/product/:pid", deleteProductFromCart);
 router.delete("/:cid", emptyCart)
 router.put ("/:cid/product/:pid", addMoreOf)
 router.put("/:cid", autofill)
