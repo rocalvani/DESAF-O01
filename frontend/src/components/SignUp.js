@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from 'axios'
+import { API } from "../utils";
 
 
 const URL =
@@ -44,7 +44,7 @@ const SignUp = ()=>{
     const signup = async (e) => {
       e.preventDefault();
       try {
-        let response = await axios.post(
+        let response = await API.post(
           URL + "api/jwt/signup",
           JSON.stringify({ first_name, last_name, age, email, password }),
           {

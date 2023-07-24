@@ -30,7 +30,12 @@ export default class productService {
         return result;
     };
 
-    static async update(id, data){
+    static async findByOwner(owner){
+      const result = await productModel.find({owner: owner});
+      return result;
+  };
+
+    static async updateProduct(id, data){
         let result = await productModel.updateOne(
             {
               _id: id,

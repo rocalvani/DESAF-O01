@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import CartItem from "./CartItem";
 import { useCart } from "../context/CartContext";
-import { ServerURL } from "../utils";
-import { Link } from "react-router-dom";
+import { API, ServerURL } from "../utils";
+
 
 
 const CartContainer =  () =>{
@@ -23,17 +22,28 @@ const CartContainer =  () =>{
    }, [cart])
 
    const purchase = async () => {
-     let result = await axios.post(ServerURL+ "checkout/" + params.cid + "/purchase")
+     let result = await API.post(ServerURL+ "checkout/" + params.cid + "/purchase")
      console.log(result.data)
+     window.location.replace("/login/checkout/" + params.cid + "/purchase/" + result.data.code);
+
    }
+
+   const empty = async () =>{
+    let result = await API.delete(ServerURL+ "api/carts/" + params.cid)
+   }
+
+   const deleteProduct = async (pid) => {
+    let result = await API.delete(`${ServerURL}api/carts/${params.cid}/product/${pid}`)
+}
 
 
     return (
         <div>
-          {loaded ? cart.map((el) => { return <CartItem product={el} key={el._id} />;}) : "loading"}
+          {loaded ? cart.map((el) => { return <CartItem product={el} key={el._id}  deleteProduct={deleteProduct}/>;}) : "loading"}
 
-          <Link to={ServerURL+ "checkout/" + params.cid + "/purchase"}><button onClick={purchase}>finalizar compra</button>
-          </Link> 
+          <button onClick={purchase}>finalizar compra</button>
+          <button onClick={empty}>vaciar</button>
+         
         </div>
     )
 }

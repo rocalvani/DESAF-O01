@@ -1,5 +1,5 @@
-import axios from "axios";
 import { useState } from "react";
+import { API } from "../utils";
 
 const URL =
   process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/";
@@ -10,7 +10,7 @@ const Reset = () =>{
     const reset = async(e) => {
         e.preventDefault();
         try {
-            let response = await axios.post(
+            let response = await API.post(
                 URL + "users/reset",
                 JSON.stringify({ email: email }),
                 {

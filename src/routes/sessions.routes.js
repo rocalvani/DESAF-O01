@@ -15,7 +15,7 @@ router.get('/github', passport.authenticate('github', {scope: ['user:email']}), 
         maxAge: 60000,
         httpOnly: false,
       });
-      res.send({ message: "successful login" });
+      res.status(201).send({status: "successful login", token: token });
 })
 
 router.get('/githubcallback', passport.authenticate('github', {failureRedirect: '/login'}), async(req,res)=> {
@@ -26,7 +26,7 @@ router.get('/githubcallback', passport.authenticate('github', {failureRedirect: 
         maxAge: 1800000,
         httpOnly: false,
       });
-    res.redirect('/api/sessions/current')
+    res.status(201).redirect('/api/sessions/current')
 })
 
 router.get('/current', passportCall('jwt'), authorization('user'), current)

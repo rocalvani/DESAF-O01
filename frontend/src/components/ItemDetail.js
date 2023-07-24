@@ -2,6 +2,8 @@ import AddItemButton from "./AddItemButton";
 
 const ItemDetail = ({product}) => {
 
+  const tags = product.tags
+
   return (
     <div className="detail">
       <div className="detail__info">
@@ -12,7 +14,14 @@ const ItemDetail = ({product}) => {
       <div className="detail__img">
       <img src={"../img/products/" + product.thumbnail[0].img} />
       </div>
-      <div className="detail__desc">{product.description}</div>
+      <div className="detail__desc">
+          <p>{product.description}</p>
+          {/* {product.tags.map((el) => {
+            return (
+              <h3>{el}</h3>
+            )
+          })} */}
+        </div>
     </div>
   );
 };

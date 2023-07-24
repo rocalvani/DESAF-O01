@@ -17,6 +17,9 @@ import UserProvider from "../context/UserContext";
 import { CookiesProvider } from "react-cookie";
 import CartProvider from "../context/CartContext";
 import EmailSent from "./EmailSent"
+import UserProfile from "./UserProfile";
+import LogOut from "./LogOut";
+import AdminContainer from "./AdminContainer";
 
 function App() {
 
@@ -39,10 +42,13 @@ function App() {
       <Route path="signup" element={<SignUp />}/>
       <Route path="reset" element={<Reset />}/>
       <Route path="reset/:rid" element={<ResetForm />}/>
+      <Route path="logout" element={<LogOut/>} />
       <Route path="shop" element={<ShopContainer />}/>
       <Route path="shop/:pid" element={<ItemDetailContainer />}/>
       <Route path="checkout/:cid" element={<CartContainer />}/>
       <Route path="checkout/:cid/purchase" element={<EmailSent />}/>
+      <Route path="users/:uid" element={<UserProfile />} />
+      <Route path="admin" element={<AdminContainer />} />
      </Routes>
       </AnimatePresence>
       </ParallaxProvider>

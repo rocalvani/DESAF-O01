@@ -5,6 +5,9 @@ import { ticketService} from "../dao/managers/factory.js";
 import { cartServices, productServices } from "../dao/repository/index.js";
 import CustomError from "../errors/CustomError.js";
 import { productService } from "../dao/managers/factory.js";
+import EErrors from "../errors/enums.js";
+import { generateServerError } from "../errors/messages/serverError.message.js";
+
 
 // ----------   FIND ONE CART ---------- //
 export const getCart = async (req, res) => {
@@ -13,7 +16,7 @@ export const getCart = async (req, res) => {
 
     cart
       ? // ? res.send(JSON.stringify(cart, null, "\t"))
-        res.status(201).send({ products: cart.products })
+        res.status(201).send({ id: cart._id, products: cart.products })
       : res.status(404).send({ error: "uh-oh. it doesn't exist" });
   } catch (error) {
 
@@ -32,15 +35,16 @@ export const getCart = async (req, res) => {
 // ---------- ADD PRODUCT TO CART ---------- //
 
 export const addProductToCart = async (req, res) => {
-
-  console.log(req.params)
-
   try {
     let product = await productService.populated(req.params.pid)
 
+    console.log(product, req.user.email)
+
     // EVALUATE THAT OWNER AND CART RECEIPIENT ARE NOT THE SAME //
     if (req.user.email != product.owner.email){
-      await cartService.addToCart(req.params.cid, req.params.pid);
+
+
+await cartServices.addProduct(req.params.cid, req.params.pid) 
       let cart = await cartServices.find(req.params.cid);
        res.status(201).send(cart);
     } else {
@@ -64,7 +68,8 @@ export const addProductToCart = async (req, res) => {
 export const deleteProductFromCart = async (req, res) => {
   try {
     let result = await cartServices.deleteProduct(req.params.cid, req.params.pid)
-    res.status(201).send({status: "success", msg: "product deleted from this cart.", result: result});
+    let cart = await cartServices.populated(req.params.cid)
+    res.status(201).send({status: "success", cart: cart,msg: "product deleted from this cart.", result: result});
   } catch(error) {
     res.status(500).send({
       error: error,
@@ -90,7 +95,7 @@ export const emptyCart = async (req,res) => {
 export const addMoreOf = async (req, res) => {
   try {
     let cart = await cartServices.find(req.params.cid)
-    let product = cart.products.find((el) => el.product == req.params.pid)
+    let product = cart.products.find((el) => el._id == req.params.pid)
     let code = product._id
 
 
@@ -172,7 +177,7 @@ export const purchase = async (req, res) => {
       };
 
       ticketService.saveTicket(ticket);
-      res.status(201).send({msg: "purchase was a success", productsLeft: finalCart})
+      res.status(201).send({msg: "purchase was a success", productsLeft: finalCart, code: random})
     } else {
       res.status(400).send("This cart has no products available for purchase.");
     }
@@ -201,12 +206,57 @@ const transporter = nodemailer.createTransport({
     pass: config.gmailAppPassword,
   },
 });
-
   const mailOptions = {
     from: "uwu" + config.gmailAccount,
-    to: config.gmailAccount,
+    to: req.user.email,
     subject: "Gracias por realizar tu compra en uwu",
-    html: `<div><h1>Gracias por tu compra!</h1></div>`,
+    html: `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Factura de compra</title>
+  </head>
+  <body>
+    <center>
+      <table width="750">
+        <tr>
+          <td width="750" colspan="3">
+            <img src="" alt="" style="width: 750px; height: 250px" />
+          </td>
+        </tr>
+        <tr width="750" colspan="3" height="50">
+          <td></td>
+        </tr>
+        <tr>
+          <td width="50"></td>
+          <td width="650" style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 15pt;">
+
+            <p>Primero que nada: <b>GRACIAS</b>. (｡◕‿‿◕｡)<br>
+                Esperamos que disfrutes mucho tus productos cuando lleguen a vos!!</p>
+<p>Tu compra tiene el siguiente código:</p>
+<p><span style="background-color: pink; padding: 10pt;"><b>${req.params.code}</b></span> </p>
+<p><br>Es importante que lo guardes ya que para retirar los productos, o al llegar nuestro envío a la dirección de entrega, se corroborará que tu código sea el indicado para evitar errores.</p>
+<p>Además, te dejamos adjunta la factura indicada a tu compra.</p>
+<p>Ojalá tengas un muy buen día y sigas brillando con nosotros!!</p>
+<p>✧ &#9825; ✧</p>
+
+          </td>
+          <td width="50"></td>
+        </tr>
+        <tr width="750" colspan="3" height="50">
+          <td></td>
+        </tr>
+        <tr>
+          <td width="750" colspan="3">
+            <img src="" alt="" style="width: 750px; height: 50px" />
+          </td>
+        </tr>
+      </table>
+    </center>
+  </body>
+</html>`,
     attachments: [],
   };
 

@@ -39,8 +39,9 @@ export const logIn = async (req, res) => {
           return res.status(401).send({status:"error",error:"credentials are not correct"});
          
       }
+
       const tokenUser = {
-        name: `${user.name}`,
+        name: `${user.first_name}`,
         email: email,
         age: `${user.age}`,
         role: `${user.role}`,
@@ -60,7 +61,7 @@ export const logIn = async (req, res) => {
       }
 
       cart = await cartService.findByUser(user._id);
-      res.status(200)
+      res.status(201)
       .send({message: "successful login", user: tokenUser, cart: cart})
       // .redirect('http://localhost:3000/shop');
     } catch {
@@ -77,7 +78,6 @@ export const logIn = async (req, res) => {
 
   export const signUp = async (req, res) => {
     const { first_name, last_name, email, age, password } = req.body;
-    console.log(req.body)
   
  if (!password || !email) {
   req.logger.warning(`User credentials were incorrect @ ${req.method} ${req.url}` )

@@ -7,6 +7,6 @@ router.get("/:cid", getCart);
 
 // PURCHASE
 router.post('/:cid/purchase', purchase)
-router.get('/:cid/purchase', finalize)
+router.get('/:cid/purchase/:code', finalize)
 
 export default router;

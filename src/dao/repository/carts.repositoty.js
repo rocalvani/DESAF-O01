@@ -17,6 +17,11 @@ export default class cartRepository {
         let result = this.dao.populated(id)
         return result;
       }
+      
+      addProduct = async(a,b) => {
+        let result = this.dao.addToCart(a, b);
+        return result;
+      }
 
       update = async(a,b) => {
         let result = this.dao.update(a, b);

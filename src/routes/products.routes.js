@@ -6,8 +6,12 @@ import { createProduct, deleteProduct, updateProduct} from "../controllers/produ
 
 const router = Router();
 
-router.post("/", passportCall('jwt'), deny("user"), createProduct);
-router.put("/:pid",passportCall('jwt'), authorization('admin'), updateProduct)
+router.get("/", (req, res) => {
+    res.render("realTimeProducts")
+})
+
+router.post("/", passportCall('jwt'), deny('user'), createProduct);
+router.put("/:pid",passportCall('jwt'), deny('user'), updateProduct)
 router.delete("/:pid", passportCall('jwt'), deny('user'),deleteProduct );
 
 

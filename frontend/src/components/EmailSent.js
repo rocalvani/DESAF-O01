@@ -1,5 +1,5 @@
-import axios from "axios"
-import { ServerURL } from "../utils"
+
+import { API, ServerURL } from "../utils"
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 
@@ -10,7 +10,7 @@ const EmailSent = () => {
 
     useEffect(() => {
         const emailPurchase = async() => {
-            let result = await axios(`${ServerURL}checkout/${params.cid}/purchase`)
+            let result = await API(`${ServerURL}checkout/${params.cid}/purchase`)
             console.log(result.data)
         }
         setLoaded(true)

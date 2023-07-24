@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ItemDetail from "./ItemDetail";
-import axios from "axios";
-import { ServerURL } from "../utils";
+import { API, ServerURL } from "../utils";
 // import LoaderContainer from "./LoaderContainer";
 
 
@@ -15,7 +14,7 @@ const ItemDetailContainer = () => {
    useEffect(() => {
     const getShop = async () => {
       try { 
-        let response = await axios(ServerURL + "shop/" + params.pid);
+        let response = await API(ServerURL + "shop/" + params.pid);
         setProduct(response.data);
         setCarga(true)
       } catch (error) {

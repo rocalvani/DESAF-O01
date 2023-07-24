@@ -13,9 +13,13 @@ router.get('/login', (req, res)=>{
     res.render("login");
 })
 
-router.get('/user',passportCall("jwt"), async(req,res) => {
+router.get('/user/:uid',passportCall("jwt"), async(req,res) => {
   let user = await userServices.censor(req.user.email)
-  res.send(user)
+  res.send({user: user, role: req.user.role})
+})
+
+router.get('/online', passportCall("jwt"), async(req,res) =>{
+  res.send({user: req.user})
 })
 
 router.get("/",
@@ -30,6 +34,7 @@ router.get('/signup', (req, res)=>{
 })
 
 router.get("/logout", (req, res) => {
+  console.log("generando logout")
   res.clearCookie("jwtCookieToken").send("borrado");
   });
 
@@ -61,9 +66,71 @@ router.get("/logout", (req, res) => {
         from: "uwu" + config.gmailAccount,
         to: email,
         subject: "Reestablecimiento de contraseña",
-        html: '<div><h1>seguí para reestablecer</h1> <a href="http://localhost:3000/reset/' + recovery + '">este link</a></div>',
+        html: `<!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Reseteo de contraseña</title>
+          </head>
+          <body>
+            <center>
+              <table width="750">
+                <tr>
+                  <td width="750" colspan="3">
+                    <img src="" alt="" style="width: 750px; height: 250px" />
+                  </td>
+                </tr>
+                <tr width="750" colspan="3" height="50">
+                  <td></td>
+                </tr>
+                <tr>
+                  <td width="50"></td>
+                  <td width="650" style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 15pt;">
+        
+                    <p>٩(⁎❛ᴗ❛⁎)۶ </p>
+                    <p> Recibimos tu pedido de reseteo de contraseña y estamos acá para dejarte el link a tu salvación.</p>
+        
+                  </td>
+                  <td width="50"></td>
+                </tr>
+                <tr>
+                  <td width="750" colspan="3" height="50"></td>
+                </tr>
+                <tr>
+                    <td width="750" colspan="3"><a href="http://localhost:3000/reset/'${recovery}">
+                        <img src="" alt="" style="width: 750px; height: 50px" /></a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="750" colspan="3" height="20"></td>
+                  </tr>
+                  <tr>
+                    <td width="50"></td>
+                    <td width="650" style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 15pt;">
+          
+                      <p>Recordá que este link es válido por una hora desde el momento de recibido este mail.</p>
+                      <p>✧ &#9825; ✧</p>
+                      
+                    </td>
+                    <td width="50"></td>
+                  </tr>
+                  <tr>
+                    <td width="750" colspan="3" height="20"></td>
+                  </tr>
+                <tr>
+                  <td width="750" colspan="3">
+                    <img src="" alt="" style="width: 750px; height: 50px" />
+                  </td>
+                </tr>
+              </table>
+            </center>
+          </body>
+        </html>`,
         attachments: [],
       };
+
     
       let result = transporter.sendMail(mailOptions, (error, info) => {
         if (error) {

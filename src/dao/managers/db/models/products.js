@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import mongoosePaginate from "mongoose-paginate-v2"
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const productCollection = "products";
 
@@ -17,9 +17,9 @@ const stringTypeSchemaNonUniqueRequired = {
 };
 
 const numberTypeSchemaNonUniqueRequired = {
-    type: Number,
-    required: true,
-  };
+  type: Number,
+  required: true,
+};
 
 const productSchema = new mongoose.Schema({
   title: stringTypeSchemaNonUniqueRequired,
@@ -27,36 +27,38 @@ const productSchema = new mongoose.Schema({
   price: numberTypeSchemaNonUniqueRequired,
   thumbnail: {
     type: [
-        {
-            img: {
-                type: String,
-                required: true
-            }
-        }
+      {
+        img: {
+          type: String,
+          required: true,
+        },
+      },
     ],
-    default:[]
-},
+    default: [],
+  },
   code: stringTypeSchemaUniqueRequired,
   stock: numberTypeSchemaNonUniqueRequired,
-  status: {type: Boolean, required: true},
+  status: { type: Boolean, required: true },
   category: {
     type: String,
-    index: true
+    required: true,
   },
   tags: [
     {
-        tag: {
-            type: String
-        }
-    }
+      tag: {
+        type: String,
+      },
+    },
   ],
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "users",
-    required: true
+    required: true,
+    default: "64850304f33da5967804160b",
   },
+  
 });
 
-productSchema.plugin(mongoosePaginate)
+productSchema.plugin(mongoosePaginate);
 
-export const productModel = mongoose.model(productCollection, productSchema)
+export const productModel = mongoose.model(productCollection, productSchema);

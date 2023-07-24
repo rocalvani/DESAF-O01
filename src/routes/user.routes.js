@@ -31,22 +31,26 @@ router.put("/:id", async (req, res) =>{
 router.get ('/:id', async(req,res)=>{
     try {
         const user = await userModel.findById(req.params.id)
-        res.send(user)
+        res.status(201).send(user)
     } catch (error) {
-        
+        res.status(500)
     }
 })
 
 router.post("/premium/:uid", async(req, res) =>{
-    const user =  await userService.findByID(req.params.uid)
-  
-    if (user.role === "user") {
-        await userService.upgrade(user._id, "premium")
-    } else {
-        await userService.upgrade(user._id, "user")
+    try {
+        const user =  await userService.findByID(req.params.uid)
+      
+        if (user.role === "user") {
+            await userService.upgrade(user._id, "premium")
+        } else {
+            await userService.upgrade(user._id, "user")
+        }
+      
+        res.status(201).send({status: "success", msg: "user updated accordingly."})
+      
+    } catch (error) {
+        res.status(500)
     }
-  
-    res.send({status: "success", msg: "user updated accordingly."})
-  
   })
 export default router

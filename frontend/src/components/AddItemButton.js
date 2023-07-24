@@ -1,29 +1,22 @@
-import axios from "axios";
+import { useCart } from "../context/CartContext";
 import { useUser } from "../context/UserContext";
-import { ServerURL } from "../utils";
+import { API, ServerURL } from "../utils";
 
 
 
 const AddItemButton = (props) => {
 
   const {cartID} = useUser()
+  const {addToCart} = useCart()
 
-      const addToCart = async() =>{
-
-        const API = axios.create({
-          baseURL: "http://localhost:8080",
-          withCredentials: true,
-        });
-
-    let response = await API.post(`${ServerURL}api/carts/${cartID}/product/${props.pid}`)
-    let cart = response.data
-    console.log(cart)
+  const handleAdd =() => {
+    addToCart(cartID, props.pid)
   }
 
     return ( 
         <button
             className="item__count--add"
-            onClick={addToCart}
+            onClick={handleAdd}
           >
             sumar al carrito
           </button>

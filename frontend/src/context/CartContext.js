@@ -1,8 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
 import { useCookies } from 'react-cookie';
 import { useUser } from "./UserContext";
-import {ServerURL} from '../utils.js'
+import {API, ServerURL} from '../utils.js'
 
 
 const secure = window.location.protocol === 'https'
@@ -21,9 +20,20 @@ const CartProvider = ({children}) => {
     const [cart, setCart] = useState(stored)
     const [quantity, setQuantity] = useState(0)
 
+    const {cartID, logged} = useUser()
+
+    useEffect(() => {
+       if (logged) {
+        const getOnline = async () => {
+            await getCart(cartID)
+           }
+           getOnline()
+       }
+    }, [logged, cart])
+
     const getCart = async (cid) => {
-        try { 
-          let response = await axios(ServerURL+"checkout/"+cid);
+        // try { 
+          let response = await API(ServerURL+"checkout/"+cid);
 
             let products = response.data.products
             let quantity = products.reduce(
@@ -35,16 +45,35 @@ const CartProvider = ({children}) => {
             setCart(response.data.products);
             setQuantity(quantity)
 
-        } catch (error) {
-          console.error(error)
-        }
+        // } catch (error) {
+        //   console.error(error)
+        // }
       };
+
+      const addToCart = async(uid, pid) =>{
+try { 
+    let response = await API.post(`${ServerURL}api/carts/${uid}/product/${pid}`)
+    let products = response.data.products
+            let quantity = products.reduce(
+                (prev, curr) => {
+                    return prev + curr.quantity
+                } , 0
+            )
+
+            setCart(response.data.products);
+            setQuantity(quantity)
+
+} catch (error) {
+    console.log(error)
+    
+}      }
     
 
     const values = {
         cart: cart,
         getCart: getCart,
-        quantity: quantity
+        quantity: quantity,
+        addToCart: addToCart,
     }
 
     return (

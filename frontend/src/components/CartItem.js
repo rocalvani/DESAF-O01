@@ -1,20 +1,15 @@
-import axios from 'axios'
-import { ServerURL } from "../utils";
+
+import { API, ServerURL } from "../utils";
 import { useUser } from '../context/UserContext.js';
-import { useState } from 'react';
 
 
-const CartItem = (el) => {
+
+const CartItem = ({deleteProduct, product}) => {
 
     const {cartID} = useUser()
 
-    const deleteProduct = async () => {
-        let result = await axios.delete(`${ServerURL}api/carts/${cartID}/product/${el.product._id}`)
-        console.log(result.data)
-    }
-
     const updateQuantity = async (e) => {
-        let result = await axios.put(`${ServerURL}api/carts/${cartID}/product/${el.product._id}`, 
+        let result = await API.put(`${ServerURL}api/carts/${cartID}/product/${product._id}`, 
         JSON.stringify({quantity: e.target.value}),
         {
           headers: { "Content-Type": "application/json" },
@@ -23,13 +18,17 @@ const CartItem = (el) => {
         console.log(result.data)
     }
 
+    const handleDelete = () =>{
+        deleteProduct(product._id)
+    }
+
     return (
         <div className="main__login">
             nombre:
-            {el.product.title}
+            {product.title}
             cantidad: 
-            <input name="quantity" placeholder={el.product.quantity} onChange={updateQuantity}/>
-            <button onClick={deleteProduct} >borrar</button>
+            <input name="quantity" placeholder={product.quantity} onChange={updateQuantity}/>
+            <button onClick={handleDelete} >borrar</button>
         </div>
     )
 }

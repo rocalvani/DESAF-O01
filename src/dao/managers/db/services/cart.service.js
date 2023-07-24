@@ -81,11 +81,12 @@ export default class cartService {
   }
 
   static async deleteProduct(cid, pid){
-    let result = await cartModel.updateOne({
-      _id: cid,
-    }, {
-      $pull: {products: {product: pid}}
-    });
+
+    let result = await cartModel.findByIdAndUpdate(cid, {
+      $pull: {
+        products: {_id: pid}
+      }
+    })
     return result
   }
 

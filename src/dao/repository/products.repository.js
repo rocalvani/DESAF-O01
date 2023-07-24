@@ -13,6 +13,11 @@ export default class productRepository {
         return result
     }
 
+    findByOwner = async (owner) => {
+        let result = await this.dao.find(owner);
+        return result
+    }
+
     save = async(body) =>{
         let result = await this.dao.save(body);
         return result;

@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
 import { useCookies } from 'react-cookie';
-import cookies from "js-cookies";
+import { API, ServerURL } from "../utils";
+
 const secure = window.location.protocol === 'https'
 
 const userContext = createContext()
@@ -15,8 +15,10 @@ export const useUser = () => {
 const UserProvider =({children}) =>{
 
     const [user, setUser] = useState()
+    const [userID, setUserID] = useState()
     const [logged, setLogged] = useState(false)
     const [cartID, setCartID] = useState()
+    const [role, setRole] = useState()
    
     const [cookies, setCookie, removeCookie] = useCookies();
 
@@ -27,16 +29,26 @@ const UserProvider =({children}) =>{
   useEffect(() => {
     const onlineData = cookies.onlineUser
       if (onlineData) {
-        setLogged(true)
-        setUser(onlineData.user)
         setCartID(onlineData.cart)
+        setUserID(onlineData.uid)
       }
-
+    getOnline()
   }, [logged]);
+
+  const getOnline = async () => {
+    try {
+      let response = await API(ServerURL + 'users/online')
+        await setUser(response.data.user.name)
+        await setRole(response.data.user.role)
+        setLogged(true)
+          } catch (error) {
+      console.log(error)
+    }
+  }
 
   const logIn = async (email, password) => {
     try {
-      let response = await axios.post(
+      let response = await API.post(
         URL + "api/jwt/login",
         JSON.stringify({ email, password }),
         {
@@ -47,17 +59,11 @@ const UserProvider =({children}) =>{
       if (response.status === 200) {
         alert("Login realizado con exito!");
         
-        let censoredResult = await axios(URL + "users/user", {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        });
-
-        const userLog = censoredResult.data
-        
-      setLogged(true)
-      setUser(userLog.name);
-      setCartID(response.data.cart._id)
-      setCookie("onlineUser", {user: userLog.name, logged: logged, cart: response.data.cart._id}, {maxAge: 86400})
+      await setLogged(true)
+      await setUser(response.data.user.name);
+      await setCartID(response.data.cart._id)
+      await setUserID(response.data.cart.user)
+      setCookie("onlineUser", {cart: response.data.cart._id, uid: response.data.cart.user}, {maxAge: 86400})
         
       } else if (response.status === 401) {
         alert("Login invalido revisa tus credenciales!");
@@ -69,14 +75,15 @@ const UserProvider =({children}) =>{
 
   const logOut = async () => {
     try {
-      let response = await axios(URL + "users/logout", {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        });
+      console.log("ingresando a logout")
         setUser()
         setLogged(false)
         removeCookie("onlineUser")
-        window.location.replace("/");
+        let response = await API(URL + "users/logout", {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        });
+        window.location.replace('/')
     } catch (error) {
       console.error(error)
   };
@@ -88,7 +95,9 @@ const UserProvider =({children}) =>{
         logged:logged,
         logIn: logIn,
         logOut: logOut,
-        cartID: cartID
+        cartID: cartID,
+        uid: userID,
+        role: role,
     }
 
     return (
