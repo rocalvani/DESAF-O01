@@ -5,27 +5,30 @@ import passport from 'passport'
 import bcrypt from "bcrypt"
 import { faker } from '@faker-js/faker'
 
-// import multer from "multer"
+import multer from "multer"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// const storage = multer.diskStorage({
-//     destination: function (req, file,cb) {
-//         cb(null, `${_dirname}/src/public/img`)
-//     },
-//     filename: function (req,file,cb) {
-//         console.log(file)
-//         cb(null, `${Date.now()}-${file.originalname}`)
-//     }
-// })
+// MULTER //
 
-// export const upload = multer({
-//     storage, onError: function (err,next) {
-//         console.log(err)
-//         next()
-//     }
-// })
+const storage = multer.diskStorage({
+    destination:function(req,file,cb){
+        if(file.fieldname === "thumbnail") {
+            cb(null,`${__dirname}/../frontend/public/img/products`)
+        } else if (file.fieldname === "pfp") {
+            cb(null,`${__dirname}/../frontend/public/img/profiles`)
+        } else { 
+            cb(null,`${__dirname}/../frontend/public/files`)
+        }
+    },
+    filename:function(req,file,cb){
+        cb(null,`${Date.now()}-${file.originalname}`)
+    }
+})
+
+export const upload = multer({storage})
+
 
 // CREACIÓN DE HASH
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10))

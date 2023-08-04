@@ -4,15 +4,13 @@
     <input id="inputId" type="text" placeholder="Introduce un id de producto para borrar">
     
    <p>or add a product through POST:</p>
-   <form action="" method="POST">
+   <form action="" method="POST" enctype="multipart/form-data">
             <input type="text" placeholder="name" name="title">
             <input type="text" placeholder="description" name="description">
             <input type="number" placeholder="price" name="price">
             <input type="number" placeholder="stock" name="stock">
             <input type="text" placeholder="code" name="code">
-            <input type="text" placeholder="thumb" name="thumbnail">
-            <input type="text" placeholder="thumb" name="thumbnail2">
-            <input type="text" placeholder="thumb" name="thumbnail3">
+            <input type="file" id="thumbnail" name="thumbnail" accept="image/*" multiple>
             <input type="text" placeholder="status" name="status">
             <input type="text" placeholder="category" name="category">
             <button type="submit">enviar</button></form>

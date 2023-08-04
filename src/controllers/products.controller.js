@@ -31,7 +31,7 @@ export const getProducts = async (req, res) => {
 export const paginateProducts = async (req, res) => {
   try {
     let { limit, page, category, sort } = req.query;
-    limit == undefined ? (limit = 12) : (limit = limit);
+    limit == undefined ? (limit = 15) : (limit = limit);
     page == undefined ? (page = 1) : (page = page);
     sort == undefined ? (sort = 1) : (sort = -1);
 
@@ -97,9 +97,14 @@ export const paginateProducts = async (req, res) => {
 export const getOwner = async (req, res) => {
   try {
     let user = await userServices.find(req.user.email);
-    let products = await productServices.get();
+    let products;
 
-    // let products = await productServices.findByOwner(user._id)
+    if (user.role === "admin") {
+       products = await productServices.get();
+    } else {
+      products = await productServices.findBy({owner: user._id})
+    }
+
     res.status(201).send(products);
   } catch (error) {
     req.logger.fatal(`Server error @ ${req.method} ${req.url}`);
@@ -113,6 +118,26 @@ export const getOwner = async (req, res) => {
     res.status(500).status("Something went wrong on our end.");
   }
 };
+
+// ---------- GET PRODUCTS BY TAG ---------- //
+
+export const getProductsByTag = async (req,res) => {
+  try {
+    let products = await productServices.findBy({"tags.tag":req.params.tag})
+    res.status(201).send({products: products})
+  } catch (error) {
+    req.logger.fatal(`Server error @ ${req.method} ${req.url}`);
+
+    CustomError.createError({
+      name: "Server error",
+      cause: generateServerError(),
+      message: "Something went wrong on server end.",
+      code: EErrors.DATABASE_ERROR,
+    });
+    res.status(500).send("Something went wrong on our end.");
+  }
+}
+
 
 // ---------- GET A SINGLE PRODUCT BY ID ---------- //
 
@@ -153,9 +178,6 @@ export const createProduct = async (req, res) => {
       title,
       description,
       price,
-      thumbnail,
-      thumbnail2,
-      thumbnail3,
       code,
       stock,
       status,
@@ -169,7 +191,8 @@ export const createProduct = async (req, res) => {
       !price ||
       !code ||
       !status ||
-      !category
+      !category ||
+      !req.files
     ) {
       req.logger.warning(
         `Product creation failed @ ${req.method} ${req.url} due to missing information`
@@ -198,13 +221,20 @@ export const createProduct = async (req, res) => {
       });
     }
 
-    const thumbnails = [{img: thumbnail}, {img: thumbnail2}, {img: thumbnail3}]
+    // THUMBNAIL ARRAY SETTING //
+
+    let thumbnails = []
+    req.files.forEach(el=> {
+      thumbnails.push({img: el.filename})
+    });
+
+    // PRODUCT OBJECT CREATION // 
 
     const product = {
           title: title,
           description: description,
           price: price,
-          thumbnail:thumbnails,
+          thumbnail: thumbnails,
           code: code,
           stock: stock,
           status: status,
@@ -212,7 +242,7 @@ export const createProduct = async (req, res) => {
           category: category
          }
     let result = await productServices.save(product);
-    res.status(201).send(result);
+    res.status(201)
   } catch (error) {
     res.status(500).send("Something went wrong on our end.")
   }
@@ -222,15 +252,31 @@ export const createProduct = async (req, res) => {
 // ---------- MODIFY A PRODUCT ---------- //
 
 export const updateProduct = async (req, res) => {
+
+  // REQ.BODY FOR STATUS, TAGS, IMG, STOCK, PRICE // 
     try {
+
+      let id = {_id: req.params.pid}
+      let {price, stock, status} = req.body
+      let thumbnails = req.files
+
+      let data = {
+        price: price, 
+        stock: stock,
+        thumbnail: thumbnails,
+        status: status
+      }
+
+      Object.keys(data).forEach((k) => data[k] == '' && delete data[k]);
+
+
       let result = await productServices.updateProduct(
-        req.params.pid,
-        req.body.stock
+        id,data
       );
       if (!result) {
         res.status(404).send("This product does not exist");
       } 
-        res.status(201).send({ status: "product has been modified" });
+        res.status(201).redirect(303, 'http://localhost:3000/admin')
       
     } catch (error) {
       req.logger.fatal(`Server error @ ${req.method} ${req.url}`);
@@ -266,17 +312,16 @@ export const deleteProduct = async (req, res) => {
       res.status(400).send("This product doesn't exist.");
     }
 
-    // ALLOW ALL ADMINS TO DELETE //
     if (req.user.role == "admin") {
+          // ALLOW ALL ADMINS TO DELETE //
       await productServices.delete(result);
       res.status(201).send({
         status: "success",
         msg: "this product has been successfully deleted",
       });
     }
-
-    // ALLOW PREMIUM USERS TO ONLY DELETE THEIR OWN PRODUCTS //
-    if (req.user.role == "premium") {
+    else if (req.user.role == "premium") {
+      // ALLOW PREMIUM USERS TO ONLY DELETE THEIR OWN PRODUCTS //
       if (product.owner.email != req.user.email) {
         res
           .status(400)

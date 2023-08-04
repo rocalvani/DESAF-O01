@@ -14,4 +14,9 @@ export default class ticketService {
         let result = await ticketModel.findOne({code: code})
         return result;
     }
+
+    static async getTicketByEmail(email) {
+        let result = await ticketModel.find({purchaser: email})
+        return result;
+    }
 }

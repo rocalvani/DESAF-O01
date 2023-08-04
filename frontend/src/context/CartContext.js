@@ -32,7 +32,7 @@ const CartProvider = ({children}) => {
     }, [logged, cart])
 
     const getCart = async (cid) => {
-        // try { 
+        try { 
           let response = await API(ServerURL+"checkout/"+cid);
 
             let products = response.data.products
@@ -45,15 +45,16 @@ const CartProvider = ({children}) => {
             setCart(response.data.products);
             setQuantity(quantity)
 
-        // } catch (error) {
-        //   console.error(error)
-        // }
+        } catch (error) {
+          console.error(error)
+        }
       };
 
       const addToCart = async(uid, pid) =>{
 try { 
     let response = await API.post(`${ServerURL}api/carts/${uid}/product/${pid}`)
-    let products = response.data.products
+    if (response.status === 201) {
+        let products = response.data.products
             let quantity = products.reduce(
                 (prev, curr) => {
                     return prev + curr.quantity
@@ -62,9 +63,12 @@ try {
 
             setCart(response.data.products);
             setQuantity(quantity)
+    }
 
 } catch (error) {
-    console.log(error)
+    if (error.response.status === 403) {
+        alert("No tienes permisos para sumar este producto a tu carrito.")
+    }
     
 }      }
     

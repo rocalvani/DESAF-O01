@@ -43,13 +43,15 @@ const send = document.getElementById("send");
 const user = document.getElementById("user");
 const message = document.getElementById("message");
 
-send.addEventListener("click", (e) => {
-  let msg = {
-    user: user.value,
-    message: message.value,
-  };
-  socket.emit("message", msg);
-});
+if(send) {
+  send.addEventListener("click", (e) => {
+    let msg = {
+      user: user.value,
+      message: message.value,
+    };
+    socket.emit("message", msg);
+  });
+}
 
 socket.on("messages", (data) => {
   chat.innerHTML = "";

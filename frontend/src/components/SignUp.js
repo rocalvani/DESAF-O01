@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { API } from "../utils";
+import { API, ServerURL } from "../utils";
 
 
 const URL =
@@ -35,55 +35,58 @@ const URL =
 
 const SignUp = ()=>{
 
-    const [first_name, setFirstName] = useState()
-    const [last_name, setLastName] = useState()
-    const [age, setAge] = useState()
-    const [email, setEmail] = useState();
-    const [password, setPass] = useState();
+    // const [first_name, setFirstName] = useState()
+    // const [last_name, setLastName] = useState()
+    // const [age, setAge] = useState()
+    // const [email, setEmail] = useState();
+    // const [password, setPass] = useState();
   
-    const signup = async (e) => {
-      e.preventDefault();
-      try {
-        let response = await API.post(
-          URL + "api/jwt/signup",
-          JSON.stringify({ first_name, last_name, age, email, password }),
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-          }
-        );
-        if (response.status === 200) {
-          alert("Registro completo con exito!");
-          window.location.replace("/");
-        } else if (response.status === 401) {
-          alert("Registro erróneo");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    // const signup = async (e) => {
+    //   e.preventDefault();
+    //   try {
+    //     let response = await API.post(
+    //       URL + "api/jwt/signup",
+    //       JSON.stringify({ first_name, last_name, age, email, password }),
+    //       {
+    //         headers: { "Content-Type": "application/json" },
+    //         withCredentials: true,
+    //       }
+    //     );
+    //     if (response.status === 200) {
+    //       alert("Registro completo con exito!");
+    //       window.location.replace("/");
+    //     } else if (response.status === 401) {
+    //       alert("Registro erróneo");
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
 
     return(
         <div className="main__login">
     <h1>Registro</h1>
-    <form id="registerForm">
+    <form id="registerForm" method="POST" action={ServerURL + "api/jwt/signup"}  encType="multipart/form-data">
 
         <label>Nombre</label>
-        <input name="first_name" onChange={(e) => setFirstName(e.target.value)}/>
+        <input type="text" name="first_name"/>
         <br/>
         <label>Apellido</label>
-        <input name="last_name" onChange={(e) => setLastName(e.target.value)}/>
+        <input type="text" name="last_name"/>
         <br/>
         <label>Email</label>
-        <input name="email" onChange={(e) => setEmail(e.target.value)}/>
+        <input type="text" name="email" />
         <br/>
         <label>Edad</label>
-        <input name="age" onChange={(e) => setAge(e.target.value)}/>
+        <input type="text" name="age"/>
         <br/>
         <label>Contraseña</label>
-        <input name="password" onChange={(e) => setPass(e.target.value)}/>
+        <input type="password" name="password" />
 
-        <button onClick={signup}>registrar</button>
+        <input type="file" id="pfp" name="pfp" accept="image/*" />
+
+
+        <button type="submit">registrar</button>
     </form>
     <p>¿Ya tienes una cuenta? <a href="/login">Ingresa aquí</a></p>
 </div>

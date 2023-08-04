@@ -1,72 +1,80 @@
-import {Router} from 'express';
-import { passportCall, authorization, validPass, createHash, expirationJWT, expirationCall } from '.././utils.js';
-import { current } from '../controllers/sessions.controller.js';
+import { Router } from "express";
+import {
+  passportCall,
+  authorization,
+  validPass,
+  createHash,
+  expirationJWT,
+  expirationCall,
+} from ".././utils.js";
+import { current } from "../controllers/sessions.controller.js";
 import nodemailer from "nodemailer";
 import config from "../config/config.js";
-import { v4 as uuidv4 } from 'uuid';
-import { userService } from '../dao/managers/factory.js';
-import { userServices } from '../dao/repository/index.js';
+import { v4 as uuidv4 } from "uuid";
+import { userService } from "../dao/managers/factory.js";
+import { userServices } from "../dao/repository/index.js";
+import ticketService from "../dao/managers/db/services/ticket.service.js";
 
 const router = Router();
 
-router.get('/login', (req, res)=>{
-    res.render("login");
-})
+router.get("/login", (req, res) => {
+  res.render("login");
+});
 
-router.get('/user/:uid',passportCall("jwt"), async(req,res) => {
-  let user = await userServices.censor(req.user.email)
-  res.send({user: user, role: req.user.role})
-})
+router.get("/user/:uid", passportCall("jwt"), async (req, res) => {
+  let user = await userServices.censor(req.user.email);
+  let tickets = await ticketService.getTicketByEmail(req.user.email)
+  res.send({ user: user, role: req.user.role, tickets: tickets});
+});
 
-router.get('/online', passportCall("jwt"), async(req,res) =>{
-  res.send({user: req.user})
-})
+router.get("/online", passportCall("jwt"), async (req, res) => {
+  res.send({ user: req.user });
+});
 
-router.get("/",
-    passportCall('jwt'), 
-    authorization('user'),
-    current
-)
+router.get("/", passportCall("jwt"), authorization("user"), current);
 
+router.get("/signup", (req, res) => {
+  res.render("signup");
+});
 
-router.get('/signup', (req, res)=>{
-    res.render("signup");
-})
+router.get("/logout", passportCall("jwt"), async (req, res) => {
+  const user = await userServices.find(req.user.email)
 
-router.get("/logout", (req, res) => {
-  console.log("generando logout")
+    // UPDATE DE LAST CONNECTION // 
+    let last_connection = new Date();
+    await userServices.updateUser({_id: user._id}, { last_connection: last_connection.toDateString()}); 
   res.clearCookie("jwtCookieToken").send("borrado");
+});
+
+router.get("/reset", (req, res) => {
+  res.render("recover");
+});
+
+router.post("/reset", (req, res) => {
+  const { email } = req.body;
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    port: 587,
+    auth: {
+      user: config.gmailAccount,
+      pass: config.gmailAppPassword,
+    },
   });
 
-  router.get('/reset', (req,res) => {
-    res.render("recover")
-  })
+  const recovery = uuidv4();
+  const recoveryToken = expirationJWT({ token: recovery, user: email });
 
-  router.post('/reset', (req,res) => {
-    const {email} = req.body
+  res.cookie("recoveryToken", recoveryToken, {
+    maxAge: 3600000,
+    httpOnly: true,
+  });
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      port: 587,
-      auth: {
-        user: config.gmailAccount,
-        pass: config.gmailAppPassword,
-      },
-    });
-
-    const recovery = uuidv4()
-    const recoveryToken = expirationJWT({token: recovery, user: email})
-
-    res.cookie("recoveryToken", recoveryToken, {
-      maxAge: 3600000,
-      httpOnly: true,
-    });
-    
-      const mailOptions = {
-        from: "uwu" + config.gmailAccount,
-        to: email,
-        subject: "Reestablecimiento de contraseña",
-        html: `<!DOCTYPE html>
+  const mailOptions = {
+    from: "uwu" + config.gmailAccount,
+    to: email,
+    subject: "Reestablecimiento de contraseña",
+    html: `<!DOCTYPE html>
         <html lang="en">
           <head>
             <meta charset="UTF-8" />
@@ -128,44 +136,44 @@ router.get("/logout", (req, res) => {
             </center>
           </body>
         </html>`,
-        attachments: [],
-      };
+    attachments: [],
+  };
 
-    
-      let result = transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
-          
-          CustomError.createError({
-            name: "Server error",
-            cause: generateServerError(),
-            message: "Something went wrong on server end.",
-            code: EErrors.DATABASE_ERROR
-          })
-        }
+  let result = transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      req.logger.fatal(`Server error @ ${req.method} ${req.url}`);
+
+      CustomError.createError({
+        name: "Server error",
+        cause: generateServerError(),
+        message: "Something went wrong on server end.",
+        code: EErrors.DATABASE_ERROR,
       });
-    res.render("emailSent")
-  })
+    }
+  });
+  res.render("emailSent");
+});
 
-  router.get("/reset/:tk", expirationCall('expiration'), (req,res)=>{
-    res.render("reset")
-  })
+router.get("/reset/:tk", expirationCall("expiration"), (req, res) => {
+  res.render("reset");
+});
 
-  router.post("/reset/:tk", expirationCall('expiration'), async (req,res) => {
-    try {
-      const password = createHash(req.body.password)
-      const user = await userService.find(req.token.user)
-
+router.post("/reset/:tk", expirationCall("expiration"), async (req, res) => {
+  try {
+    const password = createHash(req.body.password);
+    const user = await userServices.find(req.token.user);
     if (validPass(user, req.body.password)) {
-        res.send({status: "error", msg: "new password cannot be the same as old password"})
+      res.send({
+        status: "error",
+        msg: "new password cannot be the same as old password",
+      });
     } else {
-      userService.update(user._id, password)
-     res.redirect("/users/login")
+      let result= await userServices.updateUser({_id: user._id}, { password: password }); 
+      res.redirect("http://localhost:3000/login");
     }
-
-    } catch (error) {
-      res.send({error: error})
-    }
-})
+  } catch (error) {
+    res.send({ error: error });
+  }
+});
 
 export default router;

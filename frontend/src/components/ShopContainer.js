@@ -17,7 +17,6 @@ const ShopContainer = () => {
   const [limit, setLimit] = useState()
 
   const params =useParams()
-console.log(params)
 
   useEffect(() => {
     const getShop = async () => {
@@ -28,7 +27,6 @@ console.log(params)
           limit: limit,
           sort: sort
         }});
-        console.log(response.data)
         setShop(response.data.docs);
         setCurrPage(response.data.page)
         setPagination({

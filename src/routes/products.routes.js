@@ -1,8 +1,7 @@
 import { Router } from "express";
-import { productService } from "../dao/managers/factory.js";
-
-import { authorization, deny, passportCall } from "../utils.js";
+import { authorization, deny, passportCall, upload } from "../utils.js";
 import { createProduct, deleteProduct, updateProduct} from "../controllers/products.controller.js";
+import { productServices } from "../dao/repository/index.js";
 
 const router = Router();
 
@@ -10,8 +9,8 @@ router.get("/", (req, res) => {
     res.render("realTimeProducts")
 })
 
-router.post("/", passportCall('jwt'), deny('user'), createProduct);
-router.put("/:pid",passportCall('jwt'), deny('user'), updateProduct)
+router.post("/",passportCall('jwt'), deny('user'), upload.array('thumbnail', 3), createProduct);
+router.put("/:pid",passportCall('jwt'), deny('user'), upload.array('thumbnail', 3), updateProduct)
 router.delete("/:pid", passportCall('jwt'), deny('user'),deleteProduct );
 
 
@@ -37,7 +36,7 @@ router.get("*", (req, res) => {
 //MIDDLEWARE
 router.param("word", async (req, res, next, name) => {
   try {
-      let result = await productService.findByName(name);
+      let result = await productServices.findBy({title: name})
       if (!result) {
           req.product = null;
       } else {

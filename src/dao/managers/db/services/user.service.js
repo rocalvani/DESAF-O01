@@ -22,17 +22,8 @@ export default class userService {
     }
 
     static async update(id, data){
-        let result = await userModel.updateOne(
-            {
-              _id: id,
-            },
-            {
-              $set: {
-                password: data,
-              },
-            }
-          );
-          return result;
+      let result = await userModel.findOneAndUpdate(id, data)
+      return result;
 
     }
 
@@ -49,6 +40,15 @@ export default class userService {
         );
         return result;
 
+  }
+
+  static async addDocs(id, data) {
+    let result= await userModel.updateOne({
+      _id: id,
+    }, {
+      $push: {documents: {document: data}}
+    });
+    return result
   }
 
 }

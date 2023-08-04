@@ -51,10 +51,13 @@ const Animation = () => {
         >
           <img src="./img/cloud2.svg" />
         </motion.div>
-        <motion.div className="animation__text" exit={{ opacity: 0 }}
+        <motion.div className="animation__desc" exit={{ opacity: 0 }}
           transition={transition}>
-            descripcion de producto o alguito no se todavìa muy bien qué va a decir acá. todo es flasheo. <br />
-            <Link to={"/home"}>y link</Link>
+<div className="animation__text">
+descripcion de producto o alguito no se todavìa muy bien qué va a decir acá. todo es flasheo. <br />
+
+</div>
+            <Link to={"/home"}><div className="animation__button">link</div></Link>
         </motion.div>
 
       </motion.div>

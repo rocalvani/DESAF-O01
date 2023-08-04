@@ -40,6 +40,11 @@ export const logIn = async (req, res) => {
          
       }
 
+      // UPDATE DE LAST CONNECTION // 
+      let last_connection = new Date();
+      await userServices.updateUser({_id: user._id}, { last_connection: last_connection.toDateString()}); 
+
+
       const tokenUser = {
         name: `${user.first_name}`,
         email: email,
@@ -78,6 +83,8 @@ export const logIn = async (req, res) => {
 
   export const signUp = async (req, res) => {
     const { first_name, last_name, email, age, password } = req.body;
+    let pfp = req.file
+    let user;
   
  if (!password || !email) {
   req.logger.warning(`User credentials were incorrect @ ${req.method} ${req.url}` )
@@ -103,19 +110,31 @@ export const logIn = async (req, res) => {
        
     }
   
-    const user = {
-      first_name,
-      last_name,
-      email,
-      age,
-      password: createHash(password),
-    };
-
+    if (pfp) {
+      user = {
+        first_name,
+        last_name,
+        email,
+        age,
+        pfp: pfp.filename,
+        password: createHash(password),
+      };
+  
+    } else {
+     user = {
+        first_name,
+        last_name,
+        email,
+        age,
+        password: createHash(password),
+      };
+  
+    }
     const result = await userServices.create(user)
 
     res
       .status(201)
-      .send({ status: "success", message: "user has successfully been created" });
+      .redirect('http://localhost:3000/home');
   }
 
   // CURRENT 

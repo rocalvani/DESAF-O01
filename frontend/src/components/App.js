@@ -20,6 +20,7 @@ import EmailSent from "./EmailSent"
 import UserProfile from "./UserProfile";
 import LogOut from "./LogOut";
 import AdminContainer from "./AdminContainer";
+import FooterContainer from "./FooterContainer";
 
 function App() {
 
@@ -50,6 +51,7 @@ function App() {
       <Route path="users/:uid" element={<UserProfile />} />
       <Route path="admin" element={<AdminContainer />} />
      </Routes>
+     <FooterContainer/>
       </AnimatePresence>
       </ParallaxProvider>
       </CartProvider>

@@ -16,7 +16,22 @@ const schema = new mongoose.Schema({
         type: String,
         default: 'user',
         enum: ['user','premium', 'admin'],
-    }
+    },
+    pfp: String,
+    gender: String,
+    last_connection: String,
+    documents: [
+        {
+            document: {
+                name: {
+                    type: String
+                },
+                reference: {
+                    type: String
+                }
+            }
+        }
+    ]
 })
 
 export const userModel = mongoose.model(collection,schema);

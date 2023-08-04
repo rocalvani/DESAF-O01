@@ -9,9 +9,9 @@
       "stock": "19",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
       "tags": [{"tag": "pastel"}, {"tag":"translúcido"}, {"tag":"glossy"} ],
       "comments" : [],
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "rating": 4
     },
     {
@@ -24,7 +24,7 @@
       "stock": "277",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag": "pastel"}, {"tag":"opaco"}, {"tag":"glossy"} ],
       "comments" : [],
       "rating": 3
@@ -39,7 +39,7 @@
       "stock": "7",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"opaco"}, {"tag":"glossy"} ],
       "comments" : [],
       "rating": 4
@@ -54,8 +54,8 @@
       "stock": "1",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
-      "tags": [{"tag":"opaco"}, {"tag":"glossy"} ],
+      "owner":{ "$oid": "64850304f33da5967804160b"},
+      "tags": [{"tag":"opaco"}, {"tag":"glossy"}, {"tag":"new"} ],
       "comments": []
     },
     {
@@ -68,7 +68,7 @@
       "stock": "534",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"opaco"}, {"tag":"glossy"} ],
       "comments": []
     },
@@ -82,7 +82,7 @@
       "stock": "305",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"opaco"}, {"tag":"glossy"} ],
       "comments": []
     },
@@ -95,7 +95,7 @@
       "stock": "596",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"opaco"}, {"tag":"glossy"} ],
       "comments": []
     },
@@ -108,7 +108,7 @@
       "stock": "54",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"topper"}, {"tag":"multicromo"} ],
       "comments": []
     },
@@ -121,8 +121,8 @@
       "stock": "22",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
-      "tags": [{"tag":"opaco"}, {"tag":"mate"} ],
+      "owner":{ "$oid": "64850304f33da5967804160b"},
+      "tags": [{"tag":"opaco"}, {"tag":"mate"}, {"tag":"new"} ],
       "comments": []
     },
     {
@@ -134,7 +134,7 @@
       "stock": "1",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"opaco"}, {"tag":"glossy"} ],
       "comments": []
     },
@@ -147,7 +147,7 @@
       "stock": "0",
       "status": false,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"opaco"}, {"tag":"mate"} ],
       "comments": []
     },
@@ -160,7 +160,7 @@
       "stock": "19",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"opaco"}, {"tag":"mate"} ],
       "comments": []
     },
@@ -173,7 +173,7 @@
       "stock": "26",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"opaco"}, {"tag":"glossy"} ],
       "comments": []
     },
@@ -186,7 +186,7 @@
       "stock": "5",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"topper"}, {"tag":"holográfico"} ],
       "comments": []
     },
@@ -200,7 +200,7 @@
       "stock": "0",
       "status": false,
       "category": "skincare",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"limpieza"}, {"tag":"humectante"} ],
       "comments": []
     },
@@ -214,7 +214,7 @@
       "stock": "16",
       "status": true,
       "category": "skincare",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"humectante"}, {"tag":"de día"} ],
       "comments": []
     },
@@ -228,7 +228,7 @@
       "stock": "56",
       "status": true,
       "category": "skincare",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"humectante"}, {"tag":"de noche"} ],
       "comments": []
     },
@@ -242,7 +242,7 @@
       "stock": "59",
       "status": true,
       "category": "skincare",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"humectante"}, {"tag":"bálsamo"} ],
       "comments": []
     },
@@ -256,7 +256,7 @@
       "stock": "11",
       "status": true,
       "category": "skincare",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"humectante"}, {"tag":"bálsamo"} ],
       "comments": []
     },
@@ -269,7 +269,7 @@
       "stock": "9",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"opaco"}, {"tag":"mate"} ],
       "comments": []
     },{
@@ -282,7 +282,7 @@
       "stock": "8",
       "status": true,
       "category": "skincare",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"SPF"}, {"tag":"de día"} ],
       "comments": []
     },
@@ -296,7 +296,7 @@
       "stock": "6",
       "status": true,
       "category": "skincare",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"SPF"}, {"tag":"de día"} ],
       "comments": []
     },{
@@ -309,7 +309,7 @@
       "stock": "10",
       "status": true,
       "category": "skincare",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"SPF"}, {"tag":"de día"} ],
       "comments": []
     },{
@@ -322,7 +322,7 @@
       "stock": "2",
       "status": true,
       "category": "skincare",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"humectante"}],
       "comments": []
     },{
@@ -334,8 +334,8 @@
       "stock": "0",
       "status": false,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
-      "tags": [{"tag":"opaco"}, {"tag":"glossy"} ],
+      "owner":{ "$oid": "64850304f33da5967804160b"},
+      "tags": [{"tag":"opaco"}, {"tag":"glossy"}, {"tag":"new"} ],
       "comments": []
     },{
       "nameFile": "./files/products.json",
@@ -347,7 +347,7 @@
       "stock": "2",
       "status": true,
       "category": "nail polish",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"translúcido"}, {"tag":"glossy"} ],
       "comments": []
     },{
@@ -360,7 +360,7 @@
       "stock": "0",
       "status": false,
       "category": "skincare",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"humectante"} ],
       "comments": []
     },{
@@ -373,7 +373,7 @@
       "stock": "22",
       "status": true,
       "category": "skincare",
-      "owner": "a64850304f33da5967804160b",
+      "owner":{ "$oid": "64850304f33da5967804160b"},
       "tags": [{"tag":"humectante"} ],
       "comments": []
     }

@@ -11,7 +11,6 @@ const EmailSent = () => {
     useEffect(() => {
         const emailPurchase = async() => {
             let result = await API(`${ServerURL}checkout/${params.cid}/purchase`)
-            console.log(result.data)
         }
         setLoaded(true)
         if (loaded) {

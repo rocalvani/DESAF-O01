@@ -5,8 +5,13 @@ export default class userRepository {
     this.dao = dao;
   }
 
-  find = async (el) => {
+  find = async (el) => { 
     let result = this.dao.find(el);
+    return result;
+  };
+
+  findByID = async (el) => { 
+    let result = this.dao.findByID(el);
     return result;
   };
 
@@ -15,9 +20,24 @@ export default class userRepository {
     return result;
   };
 
+  updateUser = async (id, data) => {
+    let result = this.dao.update(id, data);
+    return result;
+  };
+
   censor = async (el) => {
     let result = await this.dao.find(el);
     let dto = new UserDTO(result);
     return dto;
   };
+
+  upgrade = async (id,data) => {
+    let result = this.dao.upgrade(id, data);
+    return result;
+  }
+  
+  addDocs = async(id,data) => {
+    let result = this.dao.addDocs(id, data);
+    return result;
+  }
 }

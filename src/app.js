@@ -12,8 +12,11 @@ import cluster from 'cluster'
 import {cpus} from 'os'
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUIExpress from "swagger-ui-express"
+import methodOverride from 'method-override'
+
 
 import _dirname from "./utils.js"
+
 
 import ProductManager from "./dao/managers/filesystem/ProductManager.js";
 import messageService from "./dao/managers/db/services/message.service.js";
@@ -88,6 +91,10 @@ app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
 app.engine('handlebars', handlebars.engine())
 app.set('views', _dirname +"/views/")
 app.set('view engine', 'handlebars')
+
+// OVERRIDE
+app.use(methodOverride("_method"));
+
 
 // SESSION VA ANTES DE ROUTERS
 

@@ -23,13 +23,22 @@ const CartContainer =  () =>{
 
    const purchase = async () => {
      let result = await API.post(ServerURL+ "checkout/" + params.cid + "/purchase")
-     console.log(result.data)
-     window.location.replace("/login/checkout/" + params.cid + "/purchase/" + result.data.code);
+     if (result.status === 201) {
+      window.location.replace("/login/checkout/" + params.cid + "/purchase/" + result.data.code);
+     } 
+     else if (result.status === 400) {
+      alert(result.data.msg)
+     }
+    
 
    }
 
    const empty = async () =>{
-    let result = await API.delete(ServerURL+ "api/carts/" + params.cid)
+    try {
+      let result = await API.delete(ServerURL+ "api/carts/" + params.cid)
+    } catch (error) {
+      alert("Hubo un error de nuestra parte. Vuelve a intentar en un momento.")
+    }
    }
 
    const deleteProduct = async (pid) => {

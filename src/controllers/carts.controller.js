@@ -37,14 +37,10 @@ export const getCart = async (req, res) => {
 export const addProductToCart = async (req, res) => {
   try {
     let product = await productService.populated(req.params.pid)
-
-    console.log(product, req.user.email)
-
     // EVALUATE THAT OWNER AND CART RECEIPIENT ARE NOT THE SAME //
     if (req.user.email != product.owner.email){
-
-
-await cartServices.addProduct(req.params.cid, req.params.pid) 
+      console.log("diferentes")
+let result = await cartServices.addProduct(req.params.cid, req.params.pid) 
       let cart = await cartServices.find(req.params.cid);
        res.status(201).send(cart);
     } else {
@@ -179,7 +175,7 @@ export const purchase = async (req, res) => {
       ticketService.saveTicket(ticket);
       res.status(201).send({msg: "purchase was a success", productsLeft: finalCart, code: random})
     } else {
-      res.status(400).send("This cart has no products available for purchase.");
+      res.status(400).send({msg: "This cart has no products available for purchase.", productsLeft: finalCart});
     }
   } catch (error) {
     req.logger.fatal(`Server error @ ${req.method} ${req.url}` )

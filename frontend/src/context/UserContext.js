@@ -31,8 +31,8 @@ const UserProvider =({children}) =>{
       if (onlineData) {
         setCartID(onlineData.cart)
         setUserID(onlineData.uid)
+        getOnline()
       }
-    getOnline()
   }, [logged]);
 
   const getOnline = async () => {
@@ -56,7 +56,7 @@ const UserProvider =({children}) =>{
           withCredentials: true,
         }
       );
-      if (response.status === 200) {
+      if (response.status === 201) {
         alert("Login realizado con exito!");
         
       await setLogged(true)
@@ -64,7 +64,8 @@ const UserProvider =({children}) =>{
       await setCartID(response.data.cart._id)
       await setUserID(response.data.cart.user)
       setCookie("onlineUser", {cart: response.data.cart._id, uid: response.data.cart.user}, {maxAge: 86400})
-        
+      window.location.replace('/')
+
       } else if (response.status === 401) {
         alert("Login invalido revisa tus credenciales!");
       }
