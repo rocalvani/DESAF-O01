@@ -1,8 +1,17 @@
+import { useState } from "react";
 import AddItemButton from "./AddItemButton";
 
-const ItemDetail = ({product}) => {
+const ItemDetail = ({product, postComment}) => {
+
+  const [comment, setComment] = useState()
 
   const tags = product.tags
+  const comments = product.comments
+ 
+  const handlePost = (e) => {
+    e.preventDefault();
+    postComment(comment)
+  }
 
   return (
     <div className="detail">
@@ -16,12 +25,15 @@ const ItemDetail = ({product}) => {
       </div>
       <div className="detail__desc">
           <p>{product.description}</p>
-          {/* {product.tags.map((el) => {
-            return (
-              <h3>{el}</h3>
-            )
-          })} */}
+          {tags.map((el) => {return <span key={el.tag}>{el.tag}</span>})}
+ 
+ {comments.map((el) => {return <div key={el._id}>{el.comment.comment}</div>})}
+          <form>
+          <input type="text" onChange={(e) => setComment(e.target.value)}/>
+          <button onClick={handlePost}>comentar</button>
+        </form>
         </div>
+      
     </div>
   );
 };

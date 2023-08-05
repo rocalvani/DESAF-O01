@@ -39,7 +39,6 @@ export const addProductToCart = async (req, res) => {
     let product = await productService.populated(req.params.pid)
     // EVALUATE THAT OWNER AND CART RECEIPIENT ARE NOT THE SAME //
     if (req.user.email != product.owner.email){
-      console.log("diferentes")
 let result = await cartServices.addProduct(req.params.cid, req.params.pid) 
       let cart = await cartServices.find(req.params.cid);
        res.status(201).send(cart);

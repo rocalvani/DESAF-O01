@@ -47,4 +47,13 @@ static async findBy(data){
         .populate("owner");
     return result;
       }
+
+      static async addComment(pid, data) {
+        let result= await productModel.updateOne({
+          _id: pid,
+        }, {
+          $push: {comments: {comment: data}}
+        });
+        return result
+      }
 }

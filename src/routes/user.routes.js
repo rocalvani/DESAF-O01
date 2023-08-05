@@ -73,22 +73,33 @@ router.post("/premium/:uid", async(req, res) =>{
         let id = {_id: req.params.uid}
       let {first_name, last_name, email, age, gender} = req.body
       let pfp = req.file
+      let data; 
 
-      let data = {
-        first_name: first_name,
-        last_name: last_name,
-        email: email,
-        age: age,
-        gender: gender,
-        pfp: pfp.filename
+      if (pfp) {
+        data = {
+            first_name: first_name,
+            last_name: last_name,
+            email: email,
+            age: age,
+            gender: gender,
+            pfp: pfp.filename
+          }
+      } else {
+        data = {
+            first_name: first_name,
+            last_name: last_name,
+            email: email,
+            age: age,
+            gender: gender
+          }
       }
-
       Object.keys(data).forEach((k) => data[k] == '' && delete data[k]);
+      console.log(data)
 
       let result = await userServices.updateUser(
         id,data
       );
-        res.status(201)
+        res.status(201).redirect(`/`);
     } catch (error) {
         res.status(500).send(error)
     }
@@ -96,22 +107,24 @@ router.post("/premium/:uid", async(req, res) =>{
 
   router.post("/:uid/password", async (req,res) => {
     try {
-        const {newPassword, confirmPassword} = req.body
+        const {newPass, passConfirmation} = req.body
         const id = {_id: req.params.uid}
 
-        const user = userServices.findByID(req.params.uid)
-        if (validPass(user, req.body.password)) {
-            res.send({
+        const user = await userServices.findByID(req.params.uid)
+
+
+        if (validPass(user, req.body.newPass)) {
+            res.status(400).send({
               status: "error",
               msg: "new password cannot be the same as old password",
             });
-          }else if (newPassword != confirmPassword) {
-            res.status(400).send({msg: "passwords are not matching."})
+          }else if (newPass != passConfirmation) {
+            res.status(401).send({msg: "passwords are not matching."})
         } else {
             let result = await userServices.updateUser(
-                id,{password: newPassword}
+                id,{password: newPass}
               );
-              res.status(201)
+              res.status(201).send({msg: "successful password change."})
         }
     } catch (error) {
         res.status(500).send(error)

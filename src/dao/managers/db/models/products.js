@@ -56,6 +56,13 @@ const productSchema = new mongoose.Schema({
     required: true,
     default: "64850304f33da5967804160b",
   },
+  comments: [
+    {
+      comment: {
+        type: Object,
+      },
+    },
+  ],
   
 });
 

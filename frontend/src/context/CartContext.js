@@ -29,7 +29,7 @@ const CartProvider = ({children}) => {
            }
            getOnline()
        }
-    }, [logged, cart])
+    }, [logged,cart])
 
     const getCart = async (cid) => {
         try { 

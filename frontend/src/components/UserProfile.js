@@ -7,6 +7,8 @@ const UserProfile = () => {
   const [load, setLoad] = useState(false);
   const [role, setRole] = useState();
   const [tickets, setTickets] = useState([])
+  const [newPass, setNewPass] = useState()
+  const [passConfirmation, setPassConfirmation] = useState()
 
   const params = useParams();
 
@@ -31,6 +33,26 @@ const UserProfile = () => {
       console.log(response.data)
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const passwordUpdate = async (e) => {
+    try {
+      e.preventDefault();
+
+      let response = await API.post(`${ServerURL}api/users/${params.uid}/password`, 
+      JSON.stringify({newPass, passConfirmation}))
+      if (response.status === 400){
+        alert("Tu nueva contraseña debe ser diferente a la anterior.")
+      } else if (response.status === 401) {
+        alert("Confirmación de contraseña errónea.")
+      } else if (response.status === 201) 
+      {
+        alert("Tu contraseña fue modificada.")
+      }
+    } catch (error) {
+      console.log(error)
+
     }
   }
 
@@ -72,18 +94,15 @@ const UserProfile = () => {
 
 <button type="submit">editar</button></form>
 
-<form id="registerForm" method="POST" action={`${ServerURL}api/users/${params.uid}/password`}>
-
+<form>
 <label>Nueva contraseña</label>
-<input type="text" name="newPassword"/>
+<input type="password" name="newPassword" onChange={(e) => setNewPass(e.target.value)} />
 <br/>
 <label>Confirmar la contraseña</label>
-<input type="text" name="confirmPassword"/>
+<input type="password" name="confirmPassword" onChange={(e) => setPassConfirmation(e.target.value)}/>
+<button onClick={passwordUpdate}>editar</button></form>
 
-
-<button type="submit">editar</button></form>
-
-<form id="registerForm" method="POST" action={`${ServerURL}api/users/user/documents/${params.uid}`}  encType="multipart/form-data" multiple>
+<form id="docForm" method="POST" action={`${ServerURL}api/users/user/documents/${params.uid}`}  encType="multipart/form-data" multiple>
 <label>Archivos de identificación</label>
 <input type="file" id="thumbnail" name="documents" accept="image/*" multiple />
 

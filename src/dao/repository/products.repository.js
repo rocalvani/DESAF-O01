@@ -33,6 +33,11 @@ export default class productRepository {
         return result;
     }
 
+    addComment = async (pid, data) => {
+        let result = await this.dao.addComment(pid, data);
+        return result;
+    }
+
     populated = async (id)=>{
         let result = this.dao.populated(id)
         return result;
