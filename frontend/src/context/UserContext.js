@@ -19,6 +19,7 @@ const UserProvider =({children}) =>{
     const [logged, setLogged] = useState(false)
     const [cartID, setCartID] = useState()
     const [role, setRole] = useState()
+    const [email, setEmail] = useState()
    
     const [cookies, setCookie, removeCookie] = useCookies();
 
@@ -38,6 +39,7 @@ const UserProvider =({children}) =>{
   const getOnline = async () => {
     try {
       let response = await API(ServerURL + 'users/online')
+      await setEmail(response.data.user.email)
         await setUser(response.data.user.name)
         await setRole(response.data.user.role)
         setLogged(true)
@@ -84,7 +86,9 @@ const UserProvider =({children}) =>{
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         });
-        window.location.replace('/')
+        if (response.status === 201) {
+          window.location.replace('/')
+        }
     } catch (error) {
       console.error(error)
   };
@@ -99,6 +103,7 @@ const UserProvider =({children}) =>{
         cartID: cartID,
         uid: userID,
         role: role,
+        email: email,
     }
 
     return (

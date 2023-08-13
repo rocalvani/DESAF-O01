@@ -5,12 +5,17 @@ export default class userRepository {
     this.dao = dao;
   }
 
-  find = async (el) => { 
+  getAll = async () => {
+    let result = this.dao.getAll();
+    return result;
+  };
+
+  find = async (el) => {
     let result = this.dao.find(el);
     return result;
   };
 
-  findByID = async (el) => { 
+  findByID = async (el) => {
     let result = this.dao.findByID(el);
     return result;
   };
@@ -31,13 +36,28 @@ export default class userRepository {
     return dto;
   };
 
-  upgrade = async (id,data) => {
+  censorMany = async (arr) => {
+    let result = [];
+
+    await arr.forEach((el) => {
+      let dto = new UserDTO(el);
+      result.push(dto);
+    });
+    return result;
+  };
+
+  delete = async (id) => {
+    let result = await this.dao.delete(id)
+    return result
+  }
+
+  upgrade = async (id, data) => {
     let result = this.dao.upgrade(id, data);
     return result;
-  }
-  
-  addDocs = async(id,data) => {
+  };
+
+  addDocs = async (id, data) => {
     let result = this.dao.addDocs(id, data);
     return result;
-  }
+  };
 }

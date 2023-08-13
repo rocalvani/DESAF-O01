@@ -16,7 +16,7 @@ export default (error, req,res, next) => {
                 res.status(404).send({status: "Error", error:error.name })
            break;
                 default:
-                res.status(500).send({status: "error", error: "unhandled error"})
+                res.status(500).send({status: "error", error: "unhandled error on server end"})
                 break;
     }
 

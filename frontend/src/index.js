@@ -14,6 +14,12 @@ import SignUp from "./components/SignUp";
 import ItemDetailContainer from "./components/ItemDetailContainer";
 import CheckoutContainer from "./components/CheckoutContainer";
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faA } from '@fortawesome/free-solid-svg-icons'
+import { faCheckSquare, faCoffee } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faA, faCheckSquare, faCoffee)
+
 
 const router = createBrowserRouter([
   {

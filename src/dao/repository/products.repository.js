@@ -38,6 +38,11 @@ export default class productRepository {
         return result;
     }
 
+    deleteComment = async (pid, id) => {
+        let result = await this.dao.deleteComment(pid, id);
+        return result;
+    }
+
     populated = async (id)=>{
         let result = this.dao.populated(id)
         return result;

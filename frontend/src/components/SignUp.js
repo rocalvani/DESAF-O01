@@ -35,34 +35,6 @@ const URL =
 
 const SignUp = ()=>{
 
-    // const [first_name, setFirstName] = useState()
-    // const [last_name, setLastName] = useState()
-    // const [age, setAge] = useState()
-    // const [email, setEmail] = useState();
-    // const [password, setPass] = useState();
-  
-    // const signup = async (e) => {
-    //   e.preventDefault();
-    //   try {
-    //     let response = await API.post(
-    //       URL + "api/jwt/signup",
-    //       JSON.stringify({ first_name, last_name, age, email, password }),
-    //       {
-    //         headers: { "Content-Type": "application/json" },
-    //         withCredentials: true,
-    //       }
-    //     );
-    //     if (response.status === 200) {
-    //       alert("Registro completo con exito!");
-    //       window.location.replace("/");
-    //     } else if (response.status === 401) {
-    //       alert("Registro erróneo");
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // };
-
     return(
         <div className="main__login">
     <h1>Registro</h1>

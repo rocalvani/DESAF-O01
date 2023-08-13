@@ -6,7 +6,7 @@ const Item = ({product}) => {
   return (
     <article className="shop__item">
       <p className="tag">{product.category} </p>
-      <img alt="hola" src={"../img/products/" + product.thumbnail[2].img} width="100%"/>
+      <img alt="hola" src={"../img/products/" + product.thumbnail[0].img} width="100%"/>
             <h3 className="shop__itemTitle">{product.title}</h3>
             <p>${product.price} </p>
             <Link to={product._id}>ver más</Link>

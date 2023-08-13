@@ -68,7 +68,7 @@ export const logIn = async (req, res) => {
       cart = await cartService.findByUser(user._id);
       res.status(201)
       .send({message: "successful login", user: tokenUser, cart: cart})
-      // .redirect('http://localhost:3000/shop');
+      .redirect('http://localhost:3000/shop');
     } catch {
       req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
 
@@ -88,6 +88,7 @@ export const logIn = async (req, res) => {
   
  if (!password || !email) {
   req.logger.warning(`User credentials were incorrect @ ${req.method} ${req.url}` )
+  res.status(400).send("User already exists")
 
   CustomError.createError({
     name: "user creation error",
@@ -96,6 +97,18 @@ export const logIn = async (req, res) => {
     code: EErrors.INVALID_TYPES_ERROR
   })
  }
+
+ if(password.length < 8) {
+  req.logger.warning(`Password was too short @ ${req.method} ${req.url}` )
+  res.status(402).send("User already exists")
+
+  CustomError.createError({
+    name: "user creation error",
+    cause: generateUserErrorInfo({password}),
+    message: "User could not be created.",
+    code: EErrors.INVALID_TYPES_ERROR
+  })
+ } 
 
     const exists = await userServices.find(email);
     if (exists) {

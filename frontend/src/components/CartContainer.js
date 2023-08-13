@@ -33,17 +33,27 @@ const CartContainer =  () =>{
 
    }
 
-   const empty = async () =>{
+   const empty = async (e) =>{
     try {
+      e.preventDefault()
       let result = await API.delete(ServerURL+ "api/carts/" + params.cid)
+if (result.data === 201) {
+  alert("Carrito limpio")
+}
     } catch (error) {
       alert("Hubo un error de nuestra parte. Vuelve a intentar en un momento.")
     }
    }
 
    const deleteProduct = async (pid) => {
-    let result = await API.delete(`${ServerURL}api/carts/${params.cid}/product/${pid}`)
-}
+try {
+  let result = await API.delete(`${ServerURL}api/carts/${params.cid}/product/${pid}`)
+  if (result.data === 201) {
+    alert("Producto eliminado de tu carrito")
+  }
+} catch (error) {
+  alert("Hubo un error de nuestra parte. Vuelve a intentar en un momento.")
+}}
 
 
     return (

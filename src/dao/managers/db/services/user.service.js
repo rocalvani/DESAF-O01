@@ -5,6 +5,12 @@ export default class userService {
         console.log("user service working with mongodb.")
     }
 
+
+    static async getAll() {
+      let result = await userModel.find()
+      return result.map(el=>el.toObject());
+    }
+
     static async find(el) {
         let result = await userModel.findOne({email: el});
         return result;
@@ -48,6 +54,11 @@ export default class userService {
     }, {
       $push: {documents: {document: data}}
     });
+    return result
+  }
+
+  static async delete(id) {
+    let result = await userModel.deleteOne(id)
     return result
   }
 

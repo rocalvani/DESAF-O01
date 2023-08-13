@@ -36,10 +36,18 @@ export const getCart = async (req, res) => {
 
 export const addProductToCart = async (req, res) => {
   try {
+    let cart = await cartServices.find(req.params.cid)
+    let productIN = cart.products.find((el) => el.product == req.params.pid)
     let product = await productService.populated(req.params.pid)
+
     // EVALUATE THAT OWNER AND CART RECEIPIENT ARE NOT THE SAME //
     if (req.user.email != product.owner.email){
-let result = await cartServices.addProduct(req.params.cid, req.params.pid) 
+      if (productIN) {
+        let code = productIN._id
+        let result = await cartServices.updateCart(req.params.cid, code, productIN.quantity ++);}
+        else {
+          let result = await cartServices.addProduct(req.params.cid, req.params.pid) 
+        }
       let cart = await cartServices.find(req.params.cid);
        res.status(201).send(cart);
     } else {

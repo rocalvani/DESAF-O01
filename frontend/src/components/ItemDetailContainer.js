@@ -28,9 +28,18 @@ const ItemDetailContainer = () => {
    const postComment = async (data) => {
     try {
       let response = await API.post(`${ServerURL}api/comment/${pid}`, 
-      JSON.stringify({data}))
+      data)
     } catch (error) {
       console.error(error)
+    }
+   }
+
+   const deleteComment = async (id) => {
+    try {
+      let response = await API.delete(`${ServerURL}api/comment/${pid}/${id}`)
+    } catch (error) {
+      console.error(error)
+
     }
    }
  
@@ -40,7 +49,7 @@ const ItemDetailContainer = () => {
        {!carga ? (
         "cargando"
       ) :   <ItemDetail
-      product={product} postComment={postComment}
+      product={product} postComment={postComment} deleteComment={deleteComment}
     />
       }
   

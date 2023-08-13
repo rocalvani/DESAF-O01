@@ -56,4 +56,14 @@ static async findBy(data){
         });
         return result
       }
+
+       static async deleteComment(pid, id){
+
+    let result = await productModel.findByIdAndUpdate(pid, {
+      $pull: {
+        comments: {_id: id}
+      }
+    })
+    return result
+  }
 }

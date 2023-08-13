@@ -151,7 +151,7 @@ router.post("/reset", (req, res) => {
       });
     }
   });
-  res.render("emailSent");
+  res.status(201).send("enviado")
 });
 
 router.get("/reset/:tk", expirationCall("expiration"), (req, res) => {
@@ -169,7 +169,7 @@ router.post("/reset/:tk", expirationCall("expiration"), async (req, res) => {
       });
     } else {
       let result= await userServices.updateUser({_id: user._id}, { password: password }); 
-      res.redirect("http://localhost:3000/login");
+      res.status(201).send("success")
     }
   } catch (error) {
     res.send({ error: error });

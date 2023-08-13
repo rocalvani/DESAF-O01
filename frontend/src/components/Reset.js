@@ -18,6 +18,10 @@ const Reset = () =>{
                   withCredentials: true,
                 }
               );
+
+              if (response.status === 201) {
+                alert("Te enviamos un mail para dkfgmjkdfgm")
+              }
         } catch (error) {
             console.log(error)
         }

@@ -270,3 +270,11 @@ background: radial-gradient(
   font-size: 7pt;
   text-transform: uppercase;
 }
+
+.ratingSystem .rr--on {
+  fill: orange;
+}
+
+.ratingSystem .rr--off{
+  fill: #cccccc
+}
