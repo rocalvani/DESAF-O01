@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { API, ServerURL } from "../utils";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useWish } from "../context/WishContext";
+import {Routes, Route} from "react-router-dom";
+import VerticalTabs from "./TabsContainer";
+
 
 const UserProfile = () => {
   const [user, setUser] = useState();
@@ -9,6 +13,7 @@ const UserProfile = () => {
   const [tickets, setTickets] = useState([]);
   const [newPass, setNewPass] = useState();
   const [passConfirmation, setPassConfirmation] = useState();
+  const [wishlist, setWishlist] = useState([]);
 
   const params = useParams();
 
@@ -16,16 +21,19 @@ const UserProfile = () => {
     const getUser = async () => {
       try {
         let response = await API(ServerURL + "users/user/" + params.uid);
+        let getWish = await API(`${ServerURL}api/wishlist`);
         setUser(response.data.user);
-        setLoad(true);
         setRole(response.data.role);
         setTickets(response.data.tickets);
+        setWishlist(getWish.data.payload);
+        setLoad(true);
       } catch (error) {
         console.error(error);
       }
     };
+
     getUser();
-  }, [params]);
+  }, [user]);
 
   const premiumUpgrade = async () => {
     try {
@@ -79,59 +87,27 @@ const UserProfile = () => {
 
   if (load) {
     return (
-      <div className="main__login">
-        <p>{user.name}</p>
+      <div className="profile">
+
+     <div className="profile__container">
+     <div className="profile__user"> 
+     <p>{user.name}</p>
         <p>{user.age}</p>
-        {user.pfp}
+        <div className="profile__user--pfp">        <img src={`../img/profiles/${user.pfp}`}/>
+</div>
         <br />
         last seen: {user.last_connection}
         <br />
-        pedidos
-        {tickets.map((el) => (
-          <p key={el.code}>{el.code}</p>
-        ))}
-        {role === "premium" && user.role !== "user" ? (
+        {role === "admin" ? (
           <button onClick={premiumUpgrade}> convertir a premium</button>
         ) : (
           ""
-        )}
-        <form id="updateForm" method="POST">
-          <label>Nombre</label>
-          <input type="text" name="first_name" />
-          <br />
-          <label>Apellido</label>
-          <input type="text" name="last_name" />
-          <br />
-          <label>Email</label>
-          <input type="text" name="email" />
-          <br />
-          <label>Edad</label>
-          <input type="text" name="age" />
-          <br />
-          <label>Género</label>
-          <input type="text" name="gender" />
-          <br />
-          <label>PFP</label>
-          <input type="file" id="pfp" name="pfp" accept="image/*" />
+        )}</div>
+        <div className="profile__tabs">
+        <VerticalTabs wishlist={wishlist} tickets={tickets}/>
+        </div>
+     </div>
 
-          <button onClick={profileUpdate}>editar</button>
-        </form>
-        <form>
-          <label>Nueva contraseña</label>
-          <input
-            type="password"
-            name="newPassword"
-            onChange={(e) => setNewPass(e.target.value)}
-          />
-          <br />
-          <label>Confirmar la contraseña</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            onChange={(e) => setPassConfirmation(e.target.value)}
-          />
-          <button onClick={passwordUpdate}>editar</button>
-        </form>
         <form
           id="docForm"
           method="POST"

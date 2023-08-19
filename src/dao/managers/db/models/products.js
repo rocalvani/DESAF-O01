@@ -54,7 +54,7 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "users",
     required: true,
-    default: "64850304f33da5967804160b",
+    default: { "$oid": "64d00891eccbce9a57d04a26"},
   },
   comments: [
     {

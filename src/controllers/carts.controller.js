@@ -38,13 +38,13 @@ export const addProductToCart = async (req, res) => {
   try {
     let cart = await cartServices.find(req.params.cid)
     let productIN = cart.products.find((el) => el.product == req.params.pid)
-    let product = await productService.populated(req.params.pid)
+    let product = await productServices.populated(req.params.pid)
 
     // EVALUATE THAT OWNER AND CART RECEIPIENT ARE NOT THE SAME //
     if (req.user.email != product.owner.email){
       if (productIN) {
         let code = productIN._id
-        let result = await cartServices.updateCart(req.params.cid, code, productIN.quantity ++);}
+        let result = await cartServices.updateCart(req.params.cid, code, productIN.quantity +1);}
         else {
           let result = await cartServices.addProduct(req.params.cid, req.params.pid) 
         }
@@ -52,7 +52,7 @@ export const addProductToCart = async (req, res) => {
        res.status(201).send(cart);
     } else {
       res.status(401).send({
-        error: error,
+        error: "error",
         message: "you cannot add your own products to your cart."
       })
     }

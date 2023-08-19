@@ -19,9 +19,13 @@ const NewInContainer = () => {
 
     if (load) {
         return (
-            <div className="main__newin">{shop.map((el) => {
+            <div id="newIn" className="main__newin">
+                <h2>New collection</h2>
+                <div className="main__newin--container">
+                {shop.map((el) => {
                 return <Item key={el._id} product={el} />;
-              })}</div>
+              })}
+                    </div></div>
         )
     }
 }

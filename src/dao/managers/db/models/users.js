@@ -20,6 +20,17 @@ const schema = new mongoose.Schema({
     pfp: String,
     gender: String,
     last_connection: String,
+    wishlist: {
+        type: [
+          {
+            product: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "products",
+            }
+          },
+        ],
+        default: [],
+      },
     documents: [
         {
             document: {

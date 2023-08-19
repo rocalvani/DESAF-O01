@@ -136,7 +136,6 @@ router.post("/:uid/edit", upload.single("pfp"), async (req, res) => {
     let { first_name, last_name, email, age, gender } = req.body;
     let pfp = req.file;
     let data;
-
     if (!first_name && !last_name && !email && !age && !gender && req.files.length === 0) {
       res.status(401).send({status: "error", msg: "There's not enough information to complete this request."})
     

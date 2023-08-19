@@ -34,6 +34,7 @@ import jwtRouter from './routes/jwt.router.js'
 import productsViewsRouter from './routes/products.views.router.js'
 import cartViewsRouter from './routes/cart.views.router.js'
 import commmentRouter from './routes/comment.routes.js'
+import wishlistRouter from './routes/wishlist.routes.js'
 
 import config from "./config/config.js";
 // import MDBSingleton from "./config/MDBSingleton.js";
@@ -126,6 +127,7 @@ app.use('/api/sessions',sessionsRouter);
 app.use('/github', githubLoginRouter);
 app.use("/api/jwt", jwtRouter);
 app.use("/api/comment", commmentRouter)
+app.use("/api/wishlist", wishlistRouter)
 
 // ROUTER VIEWS
 app.use('/', viewRouter)

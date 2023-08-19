@@ -5,7 +5,6 @@ import { useUser } from '../context/UserContext.js';
 
 
 const CartItem = ({deleteProduct, product}) => {
-
     const {cartID} = useUser()
 
     const updateQuantity = async (e) => {
@@ -23,9 +22,8 @@ const CartItem = ({deleteProduct, product}) => {
     }
 
     return (
-        <div className="main__login">
-            nombre:
-            {product.title}
+        <div className="cart__item">
+            {product.product.title}<br/>
             cantidad: 
             <input name="quantity" placeholder={product.quantity} onChange={updateQuantity}/>
             <button onClick={handleDelete} >borrar</button>

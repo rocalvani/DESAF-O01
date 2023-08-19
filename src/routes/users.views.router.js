@@ -43,115 +43,129 @@ router.get("/logout", passportCall("jwt"), async (req, res) => {
     // UPDATE DE LAST CONNECTION // 
     let last_connection = new Date();
     await userServices.updateUser({_id: user._id}, { last_connection: last_connection.toDateString()}); 
-  res.clearCookie("jwtCookieToken").send("borrado");
+  res.status(201).clearCookie("jwtCookieToken").send("borrado");
 });
 
 router.get("/reset", (req, res) => {
   res.render("recover");
 });
 
-router.post("/reset", (req, res) => {
-  const { email } = req.body;
+router.post("/reset", async (req, res) => {
+  try {
+    const { email } = req.body;
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    port: 587,
-    auth: {
-      user: config.gmailAccount,
-      pass: config.gmailAppPassword,
-    },
-  });
+  let user = await userServices.find(email)
 
-  const recovery = uuidv4();
-  const recoveryToken = expirationJWT({ token: recovery, user: email });
-
-  res.cookie("recoveryToken", recoveryToken, {
-    maxAge: 3600000,
-    httpOnly: true,
-  });
-
-  const mailOptions = {
-    from: "uwu" + config.gmailAccount,
-    to: email,
-    subject: "Reestablecimiento de contraseña",
-    html: `<!DOCTYPE html>
-        <html lang="en">
-          <head>
-            <meta charset="UTF-8" />
-            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>Reseteo de contraseña</title>
-          </head>
-          <body>
-            <center>
-              <table width="750">
-                <tr>
-                  <td width="750" colspan="3">
-                    <img src="" alt="" style="width: 750px; height: 250px" />
-                  </td>
-                </tr>
-                <tr width="750" colspan="3" height="50">
-                  <td></td>
-                </tr>
-                <tr>
-                  <td width="50"></td>
-                  <td width="650" style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 15pt;">
-        
-                    <p>٩(⁎❛ᴗ❛⁎)۶ </p>
-                    <p> Recibimos tu pedido de reseteo de contraseña y estamos acá para dejarte el link a tu salvación.</p>
-        
-                  </td>
-                  <td width="50"></td>
-                </tr>
-                <tr>
-                  <td width="750" colspan="3" height="50"></td>
-                </tr>
-                <tr>
-                    <td width="750" colspan="3"><a href="http://localhost:3000/reset/'${recovery}">
-                        <img src="" alt="" style="width: 750px; height: 50px" /></a>
+  if (user) { 
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      port: 587,
+      auth: {
+        user: config.gmailAccount,
+        pass: config.gmailAppPassword,
+      },
+    });
+  
+    const recovery = uuidv4();
+    const recoveryToken = expirationJWT({ token: recovery, user: email });
+  
+    res.cookie("recoveryToken", recoveryToken, {
+      maxAge: 3600000,
+      httpOnly: true,
+    });
+  
+    const mailOptions = {
+      from: "uwu" + config.gmailAccount,
+      to: email,
+      subject: "Reestablecimiento de contraseña",
+      html: `<!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="UTF-8" />
+              <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <title>Reseteo de contraseña</title>
+            </head>
+            <body>
+              <center>
+                <table width="750">
+                  <tr>
+                    <td width="750" colspan="3">
+                      <img src="" alt="" style="width: 750px; height: 250px" />
                     </td>
                   </tr>
-                  <tr>
-                    <td width="750" colspan="3" height="20"></td>
+                  <tr width="750" colspan="3" height="50">
+                    <td></td>
                   </tr>
                   <tr>
                     <td width="50"></td>
                     <td width="650" style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 15pt;">
           
-                      <p>Recordá que este link es válido por una hora desde el momento de recibido este mail.</p>
-                      <p>✧ &#9825; ✧</p>
-                      
+                      <p>٩(⁎❛ᴗ❛⁎)۶ </p>
+                      <p> Recibimos tu pedido de reseteo de contraseña y estamos acá para dejarte el link a tu salvación.</p>
+          
                     </td>
                     <td width="50"></td>
                   </tr>
                   <tr>
-                    <td width="750" colspan="3" height="20"></td>
+                    <td width="750" colspan="3" height="50"></td>
                   </tr>
-                <tr>
-                  <td width="750" colspan="3">
-                    <img src="" alt="" style="width: 750px; height: 50px" />
-                  </td>
-                </tr>
-              </table>
-            </center>
-          </body>
-        </html>`,
-    attachments: [],
-  };
+                  <tr>
+                      <td width="750" colspan="3"><a href="http://localhost:3000/reset/'${recovery}">
+                          <img src="" alt="" style="width: 750px; height: 50px" /></a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="750" colspan="3" height="20"></td>
+                    </tr>
+                    <tr>
+                      <td width="50"></td>
+                      <td width="650" style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 15pt;">
+            
+                        <p>Recordá que este link es válido por una hora desde el momento de recibido este mail.</p>
+                        <p>✧ &#9825; ✧</p>
+                        
+                      </td>
+                      <td width="50"></td>
+                    </tr>
+                    <tr>
+                      <td width="750" colspan="3" height="20"></td>
+                    </tr>
+                  <tr>
+                    <td width="750" colspan="3">
+                      <img src="" alt="" style="width: 750px; height: 50px" />
+                    </td>
+                  </tr>
+                </table>
+              </center>
+            </body>
+          </html>`,
+      attachments: [],
+    };
+  
+    let result = transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        req.logger.fatal(`Server error @ ${req.method} ${req.url}`);
+  
+        CustomError.createError({
+          name: "Server error",
+          cause: generateServerError(),
+          message: "Something went wrong on server end.",
+          code: EErrors.DATABASE_ERROR,
+        });
+      }
+    });
+    res.status(201).send("enviado")
+  } else {
+    res.status(404).send("there is no user under this email")
+  }
+ 
+   
+  } catch (error) {
+    res.status(500).send("error")
+  }
 
-  let result = transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      req.logger.fatal(`Server error @ ${req.method} ${req.url}`);
-
-      CustomError.createError({
-        name: "Server error",
-        cause: generateServerError(),
-        message: "Something went wrong on server end.",
-        code: EErrors.DATABASE_ERROR,
-      });
-    }
-  });
-  res.status(201).send("enviado")
+  
 });
 
 router.get("/reset/:tk", expirationCall("expiration"), (req, res) => {

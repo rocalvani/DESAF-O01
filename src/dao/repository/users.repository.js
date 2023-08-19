@@ -60,4 +60,19 @@ export default class userRepository {
     let result = this.dao.addDocs(id, data);
     return result;
   };
+
+  wishlist = async (email, pid) => {
+    let result = this.dao.wishlist(email, pid)
+    return result
+  }
+
+  wishlistDel = async (email, pid) => {
+    let result = this.dao.wishlistDel(email, pid)
+    return result
+  }
+
+  populated = async (id) => {
+    let result = this.dao.populated(id)
+    return result
+  }
 }

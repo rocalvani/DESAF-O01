@@ -44,7 +44,6 @@ export const logIn = async (req, res) => {
       let last_connection = new Date();
       await userServices.updateUser({_id: user._id}, { last_connection: last_connection.toDateString()}); 
 
-
       const tokenUser = {
         name: `${user.first_name}`,
         email: email,
@@ -52,7 +51,7 @@ export const logIn = async (req, res) => {
         role: `${user.role}`,
       };
       const accessToken = generateJWToken(tokenUser);
-  
+
       // CON COOKIES
       res.cookie("jwtCookieToken", accessToken, {
         maxAge: 86400000,
@@ -64,11 +63,10 @@ export const logIn = async (req, res) => {
       if (!cart) {
         let result = await cartService.save({ user: user._id });
       }
-
       cart = await cartService.findByUser(user._id);
       res.status(201)
       .send({message: "successful login", user: tokenUser, cart: cart})
-      .redirect('http://localhost:3000/shop');
+     
     } catch {
       req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
 

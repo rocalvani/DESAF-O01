@@ -8,36 +8,24 @@ const URL =
     : "http://localhost:8080/users/logout";
 
 const NavBar = () => {
-  const { user, logged, uid, role} = useUser();
-
   return (
-    <div className="header__buttons">
+    <div className="header__left">
       <NavLink to="/cart">{/* <CartWidget /> */}</NavLink>
       <nav className="header__links">
         <ul>
           <li>
-            <NavLink to="/">home</NavLink>
+            <NavLink to="/home">home</NavLink>
           </li>
           <li>
             <NavLink to="/shop">shop</NavLink>
           </li>
           <li>
-            <NavLink to="/shop/bg">cat</NavLink>
+            <NavLink onClick={() => {
+          let about = document.getElementById("newIn");
+          about && about.scrollIntoView({ behavior: "smooth", block: "start" });
+        }}>newIn</NavLink>
           </li>
-          {logged ? (
-            <li>
-              welcome back <Link to={"users/" + uid}>{user}</Link>
-              <Link to="logout">LOG OUT</Link>
-            </li>
-          ) : (
-            <li>
-              <NavLink to="/login">LOG IN</NavLink> OR
-              <NavLink to="/signup">SIGN UP</NavLink>
-            </li>
-          )}
-          {logged && role != "user" ? (
-            <li><Link to="admin">administrar productos</Link></li>
-          ) : null}
+         
         </ul>
       </nav>
     </div>

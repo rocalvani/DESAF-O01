@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState } from "react";
 import { useUser } from "../context/UserContext";
 
@@ -15,24 +14,30 @@ const LogIn = () => {
 
   return (
     <div className="main__login">
-      <h1>Login</h1>
+      <div className="main__loginContainer">
+      <div className="main__loginContainer--login">
+
+      <h2>Login</h2>
       <form id="loginForm">
-        <label>Email</label>
+        <label>Email</label><br />
         <input name="email" onChange={(e) => setEmail(e.target.value)} />
         <br />
-        <label>Contraseña</label>
-        <input name="password" type="password" onChange={(e) => setPass(e.target.value)} />
-        <input type="submit" onClick={handleLogIn} />
+        <label>Contraseña</label><br />
+        <input name="password" type="password" onChange={(e) => setPass(e.target.value)} /><br />
+        <input type="submit" className="main__button" onClick={handleLogIn} value="Ingresar" />
       </form>
+<p><a href="/reset">¿Olvidaste tu contraseña?</a></p></div>
+  <div className="main__loginContainer--signup">
+  <h2>crear una cuenta</h2>
+
       <p>
-        ¿No estás registrado? <a href="/signup">Regístrate aquí</a>
+        <a href="/signup"><button>Creá una cuenta desde acá</button></a>
       </p>
       <p>
-        o puedes usar <a href="http://localhost:8080/api/sessions/github"> github!</a>
+      <a href="http://localhost:8080/api/sessions/github"><button>o puedes usar github!</button></a>
       </p>
-      <p>
-        Si te olvidaste la contraseña, seguí <a href="/reset">por acá</a>
-      </p>
+  
+      </div></div>
     </div>
   );
 };

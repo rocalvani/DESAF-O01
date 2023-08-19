@@ -20,7 +20,9 @@ const ResetForm = () =>{
 
     return (
         <div className="main__login">
-        <h1>Reset</h1>
+        <div className="main__loginContainer">
+            <div className="main__loginContainer--registering">
+            <h2>Reset</h2>
         <form method="POST" id="resetPass">
             <label>nueva contraseña</label>
             <input name="password" 
@@ -28,6 +30,8 @@ const ResetForm = () =>{
              />
             <button onClick={resetPass}>cambiar</button>
         </form>
+            </div>
+        </div>
     </div>
     )
 }

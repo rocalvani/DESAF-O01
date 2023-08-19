@@ -12,6 +12,7 @@ const ShopContainer = () => {
   const [load, setLoad] = useState(false)
   const [currPage, setCurrPage] = useState(1)
   const [pagination, setPagination] = useState({})
+  
 
 
   function useQuery() {
@@ -24,14 +25,9 @@ const ShopContainer = () => {
     const getShop = async () => {
       try {
         let response = await API(`${ServerURL}shop?sort=${query.get("sort")}&page=${query.get("page")}&category=${query.get("category")}&limit=${query.get("limit")}`, 
-        // {params: {
-        //   page: currPage,
-        //   category: query.get("category"),
-        //   limit: limit,
-        //   sort: sort
-        // }}
         );
-        setShop(response.data.docs);
+        if (response.status === 201) {
+          setShop(response.data.docs);
         setCurrPage(response.data.page)
         setPagination({
           hasNextPage: response.data.hasNextPage,
@@ -41,8 +37,12 @@ const ShopContainer = () => {
         })
 
         setLoad(true)
+        } else if (response.status === 401) {
+          window.location.replace('/login')
+
+        }
       } catch (error) {
-        console.error(error)
+        window.location.replace('/login')
       }
     };
     getShop();
@@ -58,10 +58,12 @@ const ShopContainer = () => {
 
  if (load) {
   return (
-    <section className="shop__container">
-      {shop.map((el) => {
+    <section className="shop">
+                  <div className="main__photo"></div>
+
+      <div className="shop__container">{shop.map((el) => {
         return <Item key={el._id} product={el} />;
-      })}
+      })}</div>
             {pagination.hasPrevPage ? <a href={`/shop?sort=${query.get("sort")}&page=${pagination.prevPage}&category=${query.get("category")}&limit=${query.get("limit")}`}><button>{pagination.prevPage}</button></a> : null}
 
       {pagination.hasNextPage ? <a href={`/shop?sort=${query.get("sort")}&page=${pagination.nextPage}&category=${query.get("category")}&limit=${query.get("limit")}`}><button >{pagination.nextPage}</button></a> : null}

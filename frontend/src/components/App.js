@@ -21,6 +21,7 @@ import UserProfile from "./UserProfile";
 import LogOut from "./LogOut";
 import AdminContainer from "./AdminContainer";
 import FooterContainer from "./FooterContainer";
+import WishProvider from "../context/WishContext";
 
 function App() {
 
@@ -30,8 +31,9 @@ function App() {
     <CookiesProvider>
       <UserProvider>
       <CartProvider>
+        <WishProvider>
     <ParallaxProvider >
-      <Header />
+      {location.pathname =="/" ? null : <Header />}
       <AnimatePresence 
       initial={false} 
       mode="wait">
@@ -51,9 +53,11 @@ function App() {
       <Route path="users/:uid" element={<UserProfile />} />
       <Route path="admin" element={<AdminContainer />} />
      </Routes>
-     <FooterContainer/>
+     {location.pathname == "/" ? null :      <FooterContainer/>
+}
       </AnimatePresence>
       </ParallaxProvider>
+      </WishProvider>
       </CartProvider>
       </UserProvider>
       </CookiesProvider>

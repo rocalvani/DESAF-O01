@@ -1,6 +1,7 @@
 import { useCart } from "../context/CartContext";
 import { useUser } from "../context/UserContext";
 import { API, ServerURL } from "../utils";
+import { Rating } from '@smastrom/react-rating';
 
 
 
@@ -15,9 +16,10 @@ const AddItemButton = (props) => {
 
     return ( 
         <button
-            className="item__count--add"
+            className="addItem"
             onClick={handleAdd}
           >
+           
             sumar al carrito
           </button>
     )

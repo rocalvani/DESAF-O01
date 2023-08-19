@@ -8,6 +8,7 @@ const MainContainer = () =>{
             <div className="main">
             <MainImg />
             <NewInContainer />
+            <div className="main__photo"></div>
         </div>
     )
 }

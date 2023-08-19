@@ -45,6 +45,8 @@ static async findBy(data){
         let result = await productModel
         .findOne({ _id: id })
         .populate("owner");
+
+        console.log(result)
     return result;
       }
 

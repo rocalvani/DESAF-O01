@@ -21,20 +21,25 @@ const Reset = () =>{
 
               if (response.status === 201) {
                 alert("Te enviamos un mail para dkfgmjkdfgm")
-              }
+              } 
         } catch (error) {
-            console.log(error)
+          alert("este no es un usuario valido")
         }
     }
 
     return (
         <div className="main__login">
-        <h1>Reset</h1>
+        <div className="main__loginContainer">
+<div className="main__loginContainer--registering">
+<h2>Reset</h2>
+<p className="main__loginContainer--desc">Por favor, dejanos tu mail para que podamos enviarte un link de reestablecimiento.</p>
         <form method="POST">
-            <label>email para enviar link</label>
+            <label>email</label>
             <input name="email" onChange={(e) => setEmail(e.target.value)} />
-            <input type="submit" onClick={reset} />
+            <button onClick={reset}>reestablecer contraseña</button>
         </form>
+</div>
+        </div>
     </div>
     )
 }

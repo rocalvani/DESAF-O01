@@ -78,7 +78,6 @@ const UserProvider =({children}) =>{
 
   const logOut = async () => {
     try {
-      console.log("ingresando a logout")
         setUser()
         setLogged(false)
         removeCookie("onlineUser")
@@ -86,7 +85,8 @@ const UserProvider =({children}) =>{
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         });
-        if (response.status === 201) {
+        console.log(response)
+        if (response.status === 200) {
           window.location.replace('/')
         }
     } catch (error) {

@@ -37,22 +37,24 @@ const SignUp = ()=>{
 
     return(
         <div className="main__login">
-    <h1>Registro</h1>
+   <div className="main__loginContainer">
+   <div className="main__loginContainer--registering">
+   <h2>Registro</h2>
     <form id="registerForm" method="POST" action={ServerURL + "api/jwt/signup"}  encType="multipart/form-data">
 
-        <label>Nombre</label>
+        <label>Nombre</label><br/>
         <input type="text" name="first_name"/>
         <br/>
-        <label>Apellido</label>
+        <label>Apellido</label><br/>
         <input type="text" name="last_name"/>
         <br/>
-        <label>Email</label>
+        <label>Email</label><br/>
         <input type="text" name="email" />
         <br/>
-        <label>Edad</label>
+        <label>Edad</label><br/>
         <input type="text" name="age"/>
         <br/>
-        <label>Contraseña</label>
+        <label>Contraseña</label><br/>
         <input type="password" name="password" />
 
         <input type="file" id="pfp" name="pfp" accept="image/*" />
@@ -60,7 +62,8 @@ const SignUp = ()=>{
 
         <button type="submit">registrar</button>
     </form>
-    <p>¿Ya tienes una cuenta? <a href="/login">Ingresa aquí</a></p>
+   </div>
+   </div>
 </div>
     )
 }

@@ -57,8 +57,10 @@ try {
 
 
     return (
-        <div>
+        <div className="cart">
+          <div className="cart__container">
           {loaded ? cart.map((el) => { return <CartItem product={el} key={el._id}  deleteProduct={deleteProduct}/>;}) : "loading"}
+          </div>
 
           <button onClick={purchase}>finalizar compra</button>
           <button onClick={empty}>vaciar</button>
