@@ -4,6 +4,9 @@ import { Link, useParams } from "react-router-dom";
 import { useWish } from "../context/WishContext";
 import {Routes, Route} from "react-router-dom";
 import VerticalTabs from "./TabsContainer";
+import { useUser } from "../context/UserContext";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 
 const UserProfile = () => {
@@ -14,18 +17,23 @@ const UserProfile = () => {
   const [newPass, setNewPass] = useState();
   const [passConfirmation, setPassConfirmation] = useState();
   const [wishlist, setWishlist] = useState([]);
+  const [owner, setOwner] = useState()
 
+  const {email} = useUser()
   const params = useParams();
+  const MySwal = withReactContent(Swal)
 
   useEffect(() => {
     const getUser = async () => {
       try {
         let response = await API(ServerURL + "users/user/" + params.uid);
         let getWish = await API(`${ServerURL}api/wishlist`);
+      
         setUser(response.data.user);
         setRole(response.data.role);
         setTickets(response.data.tickets);
         setWishlist(getWish.data.payload);
+        setOwner(email == response.data.user.email)
         setLoad(true);
       } catch (error) {
         console.error(error);
@@ -37,53 +45,19 @@ const UserProfile = () => {
 
   const premiumUpgrade = async () => {
     try {
-      let response = await API.post(
+      let response = await API.put(
         ServerURL + "api/users/premium/" + params.uid
       );
-      console.log(response.data);
     } catch (error) {
-      console.log(error);
+      if (error.response.status == 405) {
+        MySwal.fire({
+          title: <strong>Oops!</strong>,
+          html: <p>Faltan los archivos requeridos para llevar adelante el cambio de rol.</p>,
+        })  
+      }
     }
   };
 
-  const passwordUpdate = async (e) => {
-    try {
-      e.preventDefault();
-      let response = await API.post(
-        `${ServerURL}api/users/${params.uid}/password`,
-        JSON.stringify({ newPass, passConfirmation })
-      );
-      if (response.status === 400) {
-        alert("Tu nueva contraseña debe ser diferente a la anterior.");
-      } else if (response.status === 401) {
-        alert("Confirmación de contraseña errónea.");
-      } else if (response.status === 201) {
-        alert("Tu contraseña fue modificada.");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const profileUpdate = async (e) => {
-    try {
-      e.preventDefault();
-      let formData = new FormData(document.getElementById("updateForm"));
-      const config = {
-        headers: { "content-type": "multipart/form-data" },
-      };
-      let result = await API.post(
-        `${ServerURL}api/users/${params.uid}/edit`,
-        formData,
-        config
-      );
-      if (result.status === 201) {
-        alert("¡Tu perfil ha sido actualizado!");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   if (load) {
     return (
@@ -91,41 +65,24 @@ const UserProfile = () => {
 
      <div className="profile__container">
      <div className="profile__user"> 
-     <p>{user.name}</p>
+     <p className="profile__user--name">{user.name}</p>
         <p>{user.age}</p>
+        <br />
         <div className="profile__user--pfp">        <img src={`../img/profiles/${user.pfp}`}/>
 </div>
         <br />
-        last seen: {user.last_connection}
+        <p className="profile__user--ls"><b>Última vez visto:</b> {user.last_connection}</p>
         <br />
         {role === "admin" ? (
-          <button onClick={premiumUpgrade}> convertir a premium</button>
+          <button onClick={premiumUpgrade} className="profile__upgrade"> convertir a premium</button>
         ) : (
           ""
         )}</div>
         <div className="profile__tabs">
-        <VerticalTabs wishlist={wishlist} tickets={tickets}/>
+        <VerticalTabs wishlist={wishlist} tickets={tickets} owner={owner} />
         </div>
      </div>
 
-        <form
-          id="docForm"
-          method="POST"
-          action={`${ServerURL}api/users/user/documents/${params.uid}`}
-          encType="multipart/form-data"
-          multiple
-        >
-          <label>Archivos de identificación</label>
-          <input
-            type="file"
-            id="thumbnail"
-            name="documents"
-            accept="image/*"
-            multiple
-          />
-
-          <button type="submit">editar</button>
-        </form>
       </div>
     );
   }

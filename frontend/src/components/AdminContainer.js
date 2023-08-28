@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { API, ServerURL } from "../utils";
 import AdminItem from "./AdminItem";
+import { useUser } from "../context/UserContext";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
 
 const AdminContainer = () => {
 
@@ -8,6 +12,10 @@ const AdminContainer = () => {
     const [load, setLoad] = useState(false)
     const [users, setUsers] = useState([])
     const [userLoad, setUserLoad] = useState(false)
+
+    const {role} = useUser()
+    const MySwal = withReactContent(Swal)
+
   
     useEffect(() => {
       getShop();
@@ -34,6 +42,7 @@ const AdminContainer = () => {
     const getUsers = async () => {
       try {
         let response = await API(`${ServerURL}api/users/`)
+        console.log(response)
         if (response.data != null) {
           setUsers(response.data);
           setUserLoad(true)
@@ -50,9 +59,6 @@ const AdminContainer = () => {
        
         try {
           let result = await API.delete(ServerURL + 'api/products/' + pid)
-          if(result.status === 201) {
-            alert("This product was successfully deleted.")
-          }
         } catch (error) {
           console.log(error)
         }
@@ -63,7 +69,10 @@ const AdminContainer = () => {
 try {
   let result = await API.delete(`${ServerURL}api/users`)
   if(result.status === 201) {
-    alert("Inactive users have been cleared")
+    MySwal.fire({
+      title: <strong>Misión cumplida</strong>,
+      html: <p>Se han eliminado los usuarios inactivos.</p>,
+    })     
   }
 } catch (error) {
   console.log(error)
@@ -81,7 +90,6 @@ try {
       }
       
         let result = await API.post(`${ServerURL}api/products`, formData, config)
-    console.log(result.data)
       } catch (error) {
         console.log(error)
       }
@@ -91,36 +99,60 @@ try {
 
 if (load && userLoad) {
     return (
-        <div className="main__login">
+        <div className="settings">
+        <h2>Administrar productos</h2>
             
-            {shop.length > 0 ? shop.map((el) => {
+           <div className="settings__products">
+           <div className="settings__products--item">
+           {shop.length > 0 ? shop.map((el) => {
         return <AdminItem key={el._id} product={el} deleteProduct={deleteProduct} />;
       }) : null}
-
-      {users.length>0 ? users.map((el) => {
-        return <div key={el.email}>{el.name}</div>
-      }) : null}
-
-      <button onClick={clearUsers}>limpiar inactivos</button>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-            <form id="createForm"
+           </div>
+           <div className="settings__products--create">
+            <h3>Creá un nuevo producto</h3>
+           <form id="createForm"
             //  action={ServerURL + `api/products`} 
             //  method="POST" encType="multipart/form-data"
              >
+              <label>Título </label>
             <input type="text" placeholder="name" name="title" />
+            <label>descripción</label>
             <input type="text" placeholder="description" name="description"/>
+            <label>precio</label>
             <input type="number" placeholder="price" name="price" />
-            <input type="number" placeholder="stock" name="stock" />
-            <input type="text" placeholder="code" name="code" />
-            <input type="file" id="thumbnail" name="thumbnail" accept="image/*" multiple/>
-            <input type="text" placeholder="status" name="status"/>
-            <input type="text" placeholder="category" name="category"/>
-            <button onClick={createProduct}>crear</button></form>
+            <label>stock</label>
 
+            <input type="number" placeholder="stock" name="stock" />
+            
+                          <label>código único e irrepetible</label>
+<input type="text" placeholder="code" name="code" />
+<label>thumbnails</label>
+
+            <input type="file" id="thumbnail" name="thumbnail" accept="image/*" multiple/>
+            <label>status (true/false)</label>
+
+            <input type="text" placeholder="status" name="status"/>
+            <label>categoría</label>
+<input type="text" placeholder="category" name="category"/>
+<label>Tags separadas únicamente por una coma</label>
+ <input type="tags" placeholder="tags" name="tags" />
+
+            <button onClick={createProduct}>crear</button></form>
+           </div>
+           </div>
+
+     {role ==="admin" ?  <div className="settings__users">
+     <h2>Administrar usuarios</h2>
+
+      <div className="settings__users--container">
+<div className="settings__users--list">
+{users.length>0 ? users.map((el) => {
+        return <div key={el.email} className="settings__users--line"><div className="settings__users--data">{el.name}</div><div className="settings__users--data">{el.email}</div></div>
+      }) : null}
+</div>
+<div className="settings__users--delete"><button onClick={clearUsers} className="settings__button">limpiar inactivos</button></div>
+      </div>
+      </div> : null}
         </div>
     )
 }

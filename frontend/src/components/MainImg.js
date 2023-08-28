@@ -1,6 +1,7 @@
 import { Parallax, useParallax } from "react-scroll-parallax";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const detail = {
   initial: {
@@ -83,6 +84,49 @@ const MainImg = () => {
           src="./img/spark1.svg"
           className="main__img--08"
         />
+         <motion.div
+          variants={child}
+          className="main__links"
+        >
+<motion.div
+          variants={child}
+          className="main__links--link"
+          onClick={() => {
+            let about = document.getElementById("newIn");
+            about && about.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}> 
+        <h3>01</h3>
+        new in store
+        </motion.div>
+      <motion.div
+          variants={child}
+          className="main__links--link"
+          onClick={() => {
+            let about = document.getElementById("collections");
+            about && about.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}> 
+        <h3>02</h3>
+        colecciones
+        </motion.div>
+        <motion.div
+          variants={child}
+          className="main__links--link"
+          > 
+        <Link to="/shop"><h3>03</h3>
+        nuestro shop</Link>
+        </motion.div>
+        <motion.div
+          variants={child}
+          className="main__links--link"
+          onClick={() => {
+            let about = document.getElementById("footer");
+            about && about.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}> 
+        <h3>04</h3>
+        subscripción
+        </motion.div>
+
+        </motion.div>
       </motion.div>
     </motion.div>
   );

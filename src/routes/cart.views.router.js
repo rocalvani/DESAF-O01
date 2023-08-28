@@ -1,12 +1,10 @@
 import { Router } from "express";
-import { finalize, getCart, purchase } from "../controllers/carts.controller.js";
+import { finalize, getCart} from "../controllers/carts.controller.js";
+import { passportCall } from "../utils.js";
 
 const router = Router();
 
 router.get("/:cid", getCart);
-
-// PURCHASE
-router.post('/:cid/purchase', purchase)
-router.get('/:cid/purchase/:code', finalize)
+router.get('/:cid/purchase', passportCall('jwt'), finalize)
 
 export default router;

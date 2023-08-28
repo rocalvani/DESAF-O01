@@ -19,12 +19,6 @@ const NavBar = () => {
           <li>
             <NavLink to="/shop">shop</NavLink>
           </li>
-          <li>
-            <NavLink onClick={() => {
-          let about = document.getElementById("newIn");
-          about && about.scrollIntoView({ behavior: "smooth", block: "start" });
-        }}>newIn</NavLink>
-          </li>
          
         </ul>
       </nav>

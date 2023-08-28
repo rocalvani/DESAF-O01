@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useUser } from "../context/UserContext";
+import { ServerURL } from "../utils";
 
 const LogIn = () => {
   const [email, setEmail] = useState();
@@ -10,7 +11,9 @@ const LogIn = () => {
   const handleLogIn = (e) => {
     e.preventDefault();
     logIn(email, password)
-  };
+  }; 
+
+
 
   return (
     <div className="main__login">
@@ -34,7 +37,9 @@ const LogIn = () => {
         <a href="/signup"><button>Creá una cuenta desde acá</button></a>
       </p>
       <p>
-      <a href="http://localhost:8080/api/sessions/github"><button>o puedes usar github!</button></a>
+      <button 
+      // onClick={handleGithub}
+      ><a href={`${ServerURL}api/sessions/github`}>o puedes usar github!</a></button>
       </p>
   
       </div></div>

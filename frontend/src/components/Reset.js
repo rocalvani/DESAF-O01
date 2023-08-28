@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { API } from "../utils";
-
-const URL =
-  process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/";
+import { API, ServerURL } from "../utils";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const Reset = () =>{
     const [email, setEmail] = useState(); 
+    const MySwal = withReactContent(Swal)
 
     const reset = async(e) => {
         e.preventDefault();
         try {
             let response = await API.post(
-                URL + "users/reset",
+                                `${ServerURL}api/users/reset`,
                 JSON.stringify({ email: email }),
                 {
                   headers: { "Content-Type": "application/json" },
@@ -20,10 +20,16 @@ const Reset = () =>{
               );
 
               if (response.status === 201) {
-                alert("Te enviamos un mail para dkfgmjkdfgm")
+                MySwal.fire({
+                  title: <strong>Revisá tu mail</strong>,
+                  html: <p>Te enviamos un link para poder continuar este proceso.</p>,
+                })  
               } 
         } catch (error) {
-          alert("este no es un usuario valido")
+          MySwal.fire({
+            title: <strong>Oops!</strong>,
+            html: <p>Hubo un error porque este no es un usuario válido.</p>,
+          })  
         }
     }
 

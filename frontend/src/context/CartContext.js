@@ -2,12 +2,16 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { useUser } from "./UserContext";
 import {API, ServerURL} from '../utils.js'
+import { toast } from "react-toastify";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
-
-const secure = window.location.protocol === 'https'
 
 const CartContext = createContext()
 const Provider = CartContext.Provider
+
+const MySwal = withReactContent(Swal)
+
 
 export const useCart = () => {
     const values = useContext(CartContext)
@@ -44,9 +48,15 @@ const CartProvider = ({children}) => {
 
             setCart(response.data.products);
             setQuantity(quantity)
+            
 
         } catch (error) {
-          console.error(error)
+          if(error.response.status === 404) {
+            MySwal.fire({
+                title: <strong>Oops!</strong>,
+                html: <p>Este carrito no existe.</p>,
+              })  
+          }
         }
       };
 
@@ -54,7 +64,7 @@ const CartProvider = ({children}) => {
 try { 
     let response = await API.post(`${ServerURL}api/carts/${uid}/product/${pid}`)
     if (response.status === 201) {
-        let products = response.data.products
+        let products = response.data.cart.products
             let quantity = products.reduce(
                 (prev, curr) => {
                     return prev + curr.quantity
@@ -63,12 +73,29 @@ try {
 
             setCart(response.data.products);
             setQuantity(quantity)
-    }
+            toast("Tu producto ya te espera en el carrito", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });    }
 
 } catch (error) {
     if (error.response.status === 403) {
-        alert("No tienes permisos para sumar este producto a tu carrito.")
-    }
+        toast("Te pedimos disculpas, en este momento no tenemos más unidades disponibles.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });    }
     
 }      }
     

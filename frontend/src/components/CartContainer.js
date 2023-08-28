@@ -3,6 +3,9 @@ import { useParams } from "react-router-dom";
 import CartItem from "./CartItem";
 import { useCart } from "../context/CartContext";
 import { API, ServerURL } from "../utils";
+import Loader from "./Loader";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 
 
@@ -11,6 +14,7 @@ const CartContainer =  () =>{
     const [loaded, setLoaded] = useState(false)
 
     const {getCart, cart} = useCart()
+    const MySwal = withReactContent(Swal)
 
 
  useEffect(()=>{
@@ -37,36 +41,37 @@ const CartContainer =  () =>{
     try {
       e.preventDefault()
       let result = await API.delete(ServerURL+ "api/carts/" + params.cid)
-if (result.data === 201) {
-  alert("Carrito limpio")
-}
     } catch (error) {
-      alert("Hubo un error de nuestra parte. Vuelve a intentar en un momento.")
-    }
+      MySwal.fire({
+        title: <strong>Oops!</strong>,
+        html: <p>Hubo un error de nuestra parte. Por favor inténtalo nuevamente.</p>,
+      })       }
    }
 
    const deleteProduct = async (pid) => {
 try {
   let result = await API.delete(`${ServerURL}api/carts/${params.cid}/product/${pid}`)
-  if (result.data === 201) {
-    alert("Producto eliminado de tu carrito")
-  }
 } catch (error) {
-  alert("Hubo un error de nuestra parte. Vuelve a intentar en un momento.")
+  MySwal.fire({
+    title: <strong>Oops!</strong>,
+    html: <p>Hubo un error de nuestra parte. Por favor inténtalo nuevamente.</p>,
+  })  
 }}
 
 
-    return (
+    if(loaded) {
+      return (
         <div className="cart">
+          <div className="cart__empty"><button onClick={empty}>vaciar</button></div>
           <div className="cart__container">
           {loaded ? cart.map((el) => { return <CartItem product={el} key={el._id}  deleteProduct={deleteProduct}/>;}) : "loading"}
           </div>
-
-          <button onClick={purchase}>finalizar compra</button>
-          <button onClick={empty}>vaciar</button>
          
         </div>
     )
+    } else {
+      <Loader/>
+    }
 }
 
 export default CartContainer

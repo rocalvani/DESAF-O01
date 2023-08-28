@@ -7,7 +7,7 @@ export const renderChat = async (req, res) => {
       res.render("chat", { messages: messages });
     } catch (error) {
       req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
-      res.status(500).send({ error: error, message: "Nothing to see here" });
+      res.status(500).send({ error: error, message: "Something went wrong on our end." });
     }
   }
 
@@ -20,7 +20,7 @@ export const renderChat = async (req, res) => {
         res.render("chat", { messages: [] });
       } catch (error) {
         req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
-        res.status(500).send({ error: error, message: "Nothing to see here" });
+        res.status(500).send({ error: error, message: "Something went wrong on our end." });
       }
     });
   }

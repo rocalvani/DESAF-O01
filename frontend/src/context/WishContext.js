@@ -39,22 +39,9 @@ const WishProvider = ({children}) => {
            let found = await wish.find((el)=> el.product._id === pid)
            if (found) {
             let response = await API.delete(`${ServerURL}api/wishlist/${pid}`)
-            if (response.status === 201) {
-                alert("Producto borrado de tu lista")
-            } else if (response.status === 401){ 
-                alert("No está en la lista")
-                
-            }
         }
            else{ 
             let response = await API.post(`${ServerURL}api/wishlist/${pid}`)
-    
-            if (response.status === 201) {
-                alert("Producto agregado a tu lista")
-            } else if (response.status === 401){ 
-                alert("ya está sumado")
-                
-            }
            }
 
 

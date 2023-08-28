@@ -13,7 +13,7 @@ export const sendSMS = async (req, res) => {
     try {
         req.logger.info(`Testing Twilio SMS @ ${req.method} ${req.url}` )
         const result = await twilioClient.messages.create(twilioSMSOptions);
-        res.send({ message: "Success!", payload: result });
+        res.send({ status: "success", payload: result });
     } catch (error) {
         req.logger.fatal(`Server error @ ${req.method} ${req.url}` )
         res.status(500).send({ error: error });

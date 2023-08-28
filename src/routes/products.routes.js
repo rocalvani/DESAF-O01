@@ -5,14 +5,15 @@ import { productServices } from "../dao/repository/index.js";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-    res.render("realTimeProducts")
-})
+
 
 router.post("/",passportCall('jwt'), deny('user'), upload.array('thumbnail', 3), createProduct);
 router.put("/:pid",passportCall('jwt'), deny('user'), upload.array('thumbnail', 3), updateProduct)
 router.delete("/:pid", passportCall('jwt'), deny('user'),deleteProduct );
 
+router.get("/", (req, res) => {
+    res.render("realTimeProducts")
+})
 
 const Regex = "([a-zA-Z%C3%A1%C3%A9%20]+)"
 router.get(`/:word${Regex}`, async (req, res) => {

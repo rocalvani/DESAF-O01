@@ -1,0 +1,30 @@
+{
+	"info": {
+		"_postman_id": "48522710-809f-42c0-907f-1fff1d23c18e",
+		"name": "checkout",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26277644"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/checkout/64eaa46186267791c769645c",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/checkout/64eaa46186267791c769645c",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"checkout",
+						"64eaa46186267791c769645c"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

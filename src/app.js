@@ -35,6 +35,7 @@ import productsViewsRouter from './routes/products.views.router.js'
 import cartViewsRouter from './routes/cart.views.router.js'
 import commmentRouter from './routes/comment.routes.js'
 import wishlistRouter from './routes/wishlist.routes.js'
+import paymentRouter from './routes/payments.routes.js'
 
 import config from "./config/config.js";
 // import MDBSingleton from "./config/MDBSingleton.js";
@@ -128,6 +129,7 @@ app.use('/github', githubLoginRouter);
 app.use("/api/jwt", jwtRouter);
 app.use("/api/comment", commmentRouter)
 app.use("/api/wishlist", wishlistRouter)
+app.use('/api/payments', paymentRouter)
 
 // ROUTER VIEWS
 app.use('/', viewRouter)
@@ -135,39 +137,18 @@ app.use('/users',usersViewRouter);
 app.use("/shop", productsViewsRouter)
 app.use("/checkout", cartViewsRouter)
 
-app.use(errorHandler)
+
 
 const httpServer = app.listen(PORT, () => {
   console.log(`Este server corre mediante: ${PORT} `)
 });
 
-
+app.use(errorHandler)
 // SOCKET 
 
  export const socketServer = new Server(httpServer)
 
 socketServer.on('connection', socket => {
-
-//  socket.on("id",async id=>{
-//     await ProductManager.deleteProduct(id);
-//     const products = await ProductManager.getProducts()
-//      socketServer.emit('products', products)
-//  });
-
-//  socket.on('product', async data => {
-//   await new ProductManager(
-//     data.title,
-//     data.description,
-//     data.price,
-//     [data.thumbnail, data.thumbnail2, data.thumbnail3],
-//     data.code,
-//     data.stock,
-//     data.status == "false" ? data.status = false : data.status = true,
-//     data.category
-//     ).addProduct();
-//     const products = await ProductManager.getProducts()
-//     socketServer.emit('products', products)
-//  } )
 socket.on("message", async data => {
   let result = await messageService.save(data)
   let chat = await messageService.getAll()

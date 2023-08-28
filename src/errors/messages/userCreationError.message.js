@@ -1,5 +1,5 @@
 export const generateUserErrorInfo = (user) =>{
-    return "One or more properties were not completed or invalid."
+    return "One or more properties were incomplete or invalid."
 }
 
 export const generateLogInErrorInfo = () =>{

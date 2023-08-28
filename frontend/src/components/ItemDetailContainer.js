@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ItemDetail from "./ItemDetail";
 import { API, ServerURL } from "../utils";
+import Loader from "./Loader";
 // import LoaderContainer from "./LoaderContainer";
 
 
@@ -44,10 +45,10 @@ const ItemDetailContainer = () => {
    }
  
   return (
-    <div className="item">
+    <div className="itemContainer">
       
        {!carga ? (
-        "cargando"
+       <Loader />
       ) :   <ItemDetail
       product={product} postComment={postComment} deleteComment={deleteComment}
     />

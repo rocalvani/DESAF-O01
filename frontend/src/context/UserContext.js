@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
-import { API, ServerURL } from "../utils";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import { API, ServerURL, getHeaders } from "../utils";
 
 const secure = window.location.protocol === 'https'
 
@@ -22,19 +24,39 @@ const UserProvider =({children}) =>{
     const [email, setEmail] = useState()
    
     const [cookies, setCookie, removeCookie] = useCookies();
+    const MySwal = withReactContent(Swal)
 
-
-    const URL =
-  process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/";
 
   useEffect(() => {
     const onlineData = cookies.onlineUser
+    const jwt = cookies.jwtCookieToken
+    
       if (onlineData) {
         setCartID(onlineData.cart)
         setUserID(onlineData.uid)
         getOnline()
+      } else if (jwt) {
+        setCartID('64bd8ab0c94a2b42a76767db')
+        setUserID('64bd8ab0c94a2b42a76767d7')
+        getJWT()
       }
   }, [logged]);
+
+  const getJWT = async () => {
+   try {
+    let response = await API(ServerURL + 'users/')
+  setCartID(response.data.cid)
+        setUserID(response.data.uid)
+         setEmail(response.data.user.email)
+         setUser(response.data.user.name)
+        setRole(response.data.user.role)
+        setLogged(true)
+
+
+   } catch (error) {
+    console.log(error)
+   }
+  }
 
   const getOnline = async () => {
     try {
@@ -51,7 +73,7 @@ const UserProvider =({children}) =>{
   const logIn = async (email, password) => {
     try {
       let response = await API.post(
-        URL + "api/jwt/login",
+        ServerURL + "api/jwt/login",
         JSON.stringify({ email, password }),
         {
           headers: { "Content-Type": "application/json" },
@@ -59,21 +81,20 @@ const UserProvider =({children}) =>{
         }
       );
       if (response.status === 201) {
-        alert("Login realizado con exito!");
-        
       await setLogged(true)
       await setUser(response.data.user.name);
       await setCartID(response.data.cart._id)
       await setUserID(response.data.cart.user)
       setCookie("onlineUser", {cart: response.data.cart._id, uid: response.data.cart.user}, {maxAge: 86400})
-      window.location.replace('/')
+      window.location.replace('/home')
 
-      } else if (response.status === 401) {
-        alert("Login invalido revisa tus credenciales!");
-      }
+      } 
     } catch (error) {
-      console.log(error);
-    }
+      if (error.response.status === 402) {
+        MySwal.fire({
+          title: <strong>Oops!</strong>,
+          html: <i>Las credenciales que ingresaste son incorrectas.</i>,
+        })      }    }
   };
 
   const logOut = async () => {
@@ -85,7 +106,6 @@ const UserProvider =({children}) =>{
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         });
-        console.log(response)
         if (response.status === 200) {
           window.location.replace('/')
         }
@@ -104,6 +124,7 @@ const UserProvider =({children}) =>{
         uid: userID,
         role: role,
         email: email,
+
     }
 
     return (

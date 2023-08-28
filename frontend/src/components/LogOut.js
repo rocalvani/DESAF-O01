@@ -7,10 +7,18 @@ const LogOut = () => {
 
     useEffect(() => {
         logOut()
+        setTimeout(() => {
+            window.location.replace('/')
+
+        }, 1000);
     }, [])
 
     return (
-        <div></div>
+        <div className="main__login">
+<div className="main__login--out">
+nos vemos la próxima
+</div>
+        </div>
     )
 }
 

@@ -69,8 +69,7 @@ const Animation = () => {
         transition={transition}
       >
         <div className="animation__text">
-          descripcion de producto o alguito no se todavìa muy bien qué va a
-          decir acá. todo es flasheo. <br />
+          Conocela a la humectante, y mucho más entrando a nuestro sitio haciendo click acá.<br />
         </div>
         <Link to={"/home"}>
           <div className="animation__button">

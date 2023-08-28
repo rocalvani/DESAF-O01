@@ -1,15 +1,39 @@
+import { useState } from "react"
+import { API, ServerURL } from "../utils"
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
 const FooterContainer = () => {
+  const [email, setEmail] = useState()
+  const MySwal = withReactContent(Swal)
+
+
+  const handleSub = async(e) => {
+e.preventDefault()
+try {
+  let result = await API.post(`${ServerURL}subscribe`, {email: email})
+if (result.status === 201) {
+  MySwal.fire({
+    title: <strong>¡Bienvenidx!</strong>,
+    html: <p>Próximamente van a llegarte noticias nuestras a tu mail. ¡No las dejes pasar!</p>,
+  })  
+}
+} catch (error) {
+  return error
+}
+}
+
     return (
-        <div className="footer">
+        <div id="footer" className="footer">
  <div className="footer__container">
   <div className="footer__contact">
     <h2>
-      Suscripción a newsletter
+      Suscripción<br/>a newsletter
     </h2>
-    <form action="" className="footer__form">
-      <input type="text" placeholder="email" className="footer__input" />
-      <input type="submit" value="suscribirse" className="footer__submit"/>
-    </form>
+    <p className="footer__contact--desc">Sumate a nuestra lista para recibir las últimas noticias!</p>
+    <form method="POST" className="footer__form" id="subscribe">
+      <input type="text" placeholder="email" className="footer__input" onChange={(e) => setEmail(e.target.value)}/>
+<button className="footer__submit" onClick={handleSub}>enviar</button>    </form>
     <p>*accede a terminos y condiciones</p>
   </div>
   <div className="footer__sitemap">
@@ -23,6 +47,7 @@ const FooterContainer = () => {
     </div>
     <div className="footer__care">
       <ul><li>policy</li>
+      <li>terms</li>
       <li>terms</li>
       <li>contact</li></ul>
     </div>

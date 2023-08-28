@@ -1,0 +1,13 @@
+paths:
+  /api/comment/{pid}/{id}:
+    put:
+      summary: Modifica un producto existente en base a la ID enviada por params borrando un comentario.
+      tags:
+        - Products
+      responses:
+        "201":
+          description: Producto modificado satisfactoriamente.
+        "401":
+          description: El comentario le pertenece a alguien más y por lo tanto no puede ser borrado.
+        "500":
+          description: Error del lado del server.

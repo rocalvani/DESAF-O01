@@ -1,6 +1,7 @@
 import { React, useEffect, useState } from "react";
 import { API, ServerURL } from "../utils";
 import Item from "./Item";
+import { Link } from "react-router-dom";
 
 
 const NewInContainer = () => {
@@ -25,6 +26,12 @@ const NewInContainer = () => {
                 {shop.map((el) => {
                 return <Item key={el._id} product={el} />;
               })}
+              <div className="desc02">
+<p>                Esto es algo de lo nuevo que tenemos en el store como parte de nuestra colección de película.
+</p>
+                <Link to="/shop">Accedé al shop completo</Link>
+
+              </div>
                     </div></div>
         )
     }

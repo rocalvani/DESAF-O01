@@ -1,35 +1,30 @@
-import { useState } from "react";
 import { API, ServerURL } from "../utils";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
+const MySwal = withReactContent(Swal)
 
-const URL =
-  process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/";
+  const signup = async(e) =>{
+    e.preventDefault();
 
-//   const signup = async(e) =>{
-//     e.preventDefault();
-//     const data = new FormData(document.getElementById('registerForm'));
-//     console.log(data);
-//     const obj = {};
-//     data.forEach((value,key)=>obj[key]=value);
-//     console.log("Objeto formado:");
-//     console.log(obj);
-//     fetch(URL + 'api/jwt/signup',{
-//         method:'POST',
-//         body:JSON.stringify(obj),
-//         headers:{
-//             'Content-Type':'application/json'
-//         }
-//     }).then(result=> {
-//         if (result.status === 201) {
-//             result.json();
-//             alert("Usuario creado con exito!");
-//             window.location.replace('/login');
-//         }else {
-//             alert("No se pudo crear el usuario!");
-//         }
-//     }).then(
-//         json=>console.log(json));
-//   }
+    try {
+    const data = new FormData(document.getElementById('registerForm'));
+
+    const config = {     
+      headers: { 'content-type': 'multipart/form-data' }
+  }
+  
+    let result = await API.post(`${ServerURL}api/jwt/signup`, data, config)
+    if (result.status === 201) {
+                window.location.replace('/login');
+            }
+    } catch (error) {
+      MySwal.fire({
+        title: <strong>Oops!</strong>,
+        html: <p>Este usuario no pudo ser creado. Por favor inténtalo nuevamente.</p>,
+      })  
+    }
+  }
 
 
 
@@ -40,7 +35,7 @@ const SignUp = ()=>{
    <div className="main__loginContainer">
    <div className="main__loginContainer--registering">
    <h2>Registro</h2>
-    <form id="registerForm" method="POST" action={ServerURL + "api/jwt/signup"}  encType="multipart/form-data">
+    <form id="registerForm" method="POST"  encType="multipart/form-data">
 
         <label>Nombre</label><br/>
         <input type="text" name="first_name"/>
@@ -60,7 +55,7 @@ const SignUp = ()=>{
         <input type="file" id="pfp" name="pfp" accept="image/*" />
 
 
-        <button type="submit">registrar</button>
+        <button type="submit" onClick={signup}>registrar</button>
     </form>
    </div>
    </div>

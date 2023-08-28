@@ -17,9 +17,7 @@ const EditProfile = () => {
             formData,
             config
           );
-          if (result.status === 201) {
-            alert("¡Tu perfil ha sido actualizado!");
-          }
+
         } catch (error) {
           console.log(error);
         }

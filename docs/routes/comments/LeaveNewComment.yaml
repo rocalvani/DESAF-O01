@@ -1,0 +1,21 @@
+paths:
+  /api/comment/{pid}:
+    put:
+      summary: Modifica un producto existente en base a la ID enviada por params para sumar un comentario.
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content: 
+          application/json:
+           schema: 
+            type: object
+            properties:
+              comment:
+                type: string
+                example: "This is a test comment."
+      responses:
+        "201":
+          description: Producto modificado satisfactoriamente.
+        "500":
+          description: Error del lado del server.

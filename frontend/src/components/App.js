@@ -1,5 +1,7 @@
 import {AnimatePresence} from "framer-motion"
 import { useLocation} from 'react-router-dom';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import '../App.scss';
 import Header from './Header';
 import {ParallaxProvider} from 'react-scroll-parallax'
@@ -22,6 +24,7 @@ import LogOut from "./LogOut";
 import AdminContainer from "./AdminContainer";
 import FooterContainer from "./FooterContainer";
 import WishProvider from "../context/WishContext";
+import CheckoutContainer from "./CheckoutContainer";
 
 function App() {
 
@@ -32,6 +35,18 @@ function App() {
       <UserProvider>
       <CartProvider>
         <WishProvider>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
     <ParallaxProvider >
       {location.pathname =="/" ? null : <Header />}
       <AnimatePresence 
@@ -48,7 +63,7 @@ function App() {
       <Route path="logout" element={<LogOut/>} />
       <Route path="shop" element={<ShopContainer />}/>
       <Route path="shop/:pid" element={<ItemDetailContainer />}/>
-      <Route path="checkout/:cid" element={<CartContainer />}/>
+      <Route path="checkout/:cid" element={<CheckoutContainer />}/>
       <Route path="checkout/:cid/purchase" element={<EmailSent />}/>
       <Route path="users/:uid" element={<UserProfile />} />
       <Route path="admin" element={<AdminContainer />} />

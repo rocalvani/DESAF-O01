@@ -6,6 +6,16 @@ import { addMoreOf, addProductToCart, autofill, deleteProductFromCart, emptyCart
 
 const router = Router();
 
+
+
+router.post("/:cid/product/:pid", passportCall('jwt'), deny('admin'), addProductToCart);
+router.put ("/:cid/product/:pid", addMoreOf)
+router.delete("/:cid/product/:pid", deleteProductFromCart);
+router.delete("/:cid", emptyCart)
+
+
+
+// UNUSED ENDPOINTS //
 router.post("/", async (req, res) => {
   try {
     let result = await cartServices.save(req.body);
@@ -17,13 +27,5 @@ router.post("/", async (req, res) => {
       .send({ error: error, message: "couldn't create this cart" });
   }
 });
-
-router.post("/:cid/product/:pid", passportCall('jwt'), deny('admin'), addProductToCart);
-router.post("/:cid/product/:pid/react", addProductToCart);
-router.delete("/:cid/product/:pid", deleteProductFromCart);
-router.delete("/:cid", emptyCart)
-router.put ("/:cid/product/:pid", addMoreOf)
 router.put("/:cid", autofill)
-
-
 export default router;

@@ -5,6 +5,9 @@ import { userModel } from "../dao/managers/db/models/users.js";
 import { createHash, validPass } from ".././utils.js";
 import jwtStrategy from "passport-jwt";
 import { PRIVATE_KEY } from ".././utils.js";
+import config from "./config.js";
+import { cartService } from "../dao/managers/factory.js";
+import { cartServices } from "../dao/repository/index.js";
 
 const localStrategy = passportLocal.Strategy;
 
@@ -119,22 +122,28 @@ const initializePassport = () => {
       {
         clientID: "Iv1.a2b00d7b1dff7660",
         clientSecret: "5a65a0c15e8541443ab6c1dc3542560ae6bb696e",
-        callbackUrl: "http://localhost:8080/api/sessions/githubcallback",
+        callbackUrl:`http://localhost:${config.port}/api/sessions/githubcallback`,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
           let user = await userModel.findOne({ email: profile._json.email });
+  
           if (!user) {
             let newUser = {
               first_name: profile._json.name,
               last_name: "",
-              age: 18,
+              age: 0,
               email: profile._json.email,
               password: "",
+              role: "user"
             };
             let result = await userModel.create(newUser);
+            let found = await userModel.findOne({ email: profile._json.email });
+
+            let cart = await cartServices.save({ user: found._id });
             done(null, result);
           } else {
+            let cart = await cartServices.save({ user: user._id });
             done(null, user);
           }
         } catch (error) {
