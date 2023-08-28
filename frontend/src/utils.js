@@ -1,10 +1,10 @@
 import axios from 'axios'
 
 export const ServerURL =
-  process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/";
+  process.env.NODE_ENV === "production" ? "" : "https://desafio01-production.up.railway.app/";
 
   export const API = axios.create({
-    baseURL: "http://localhost:8080",
+    baseURL: "https://desafio01-production.up.railway.app/",
    headers: { "Content-Type": "application/json" },
     withCredentials: true,
   });
