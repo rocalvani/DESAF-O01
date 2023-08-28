@@ -29,7 +29,9 @@ export const paginateProducts = async (req, res) => {
     page == undefined || page == "null" ? (page = 1) : (page = page);
     sort == undefined || sort == "null" ? (sort = 1) : (sort = -1);
 
+
     let user = await userService.find(req.user.email);
+    console.log("llega acá")
 
     if (category === "" || category === "null") {
       let products = await productModel.paginate(
