@@ -18,7 +18,7 @@ export default class MDBSingleton {
 
     #connectMongoDB = async () => {
         try {
-            await mongoose.connect(config.DB)
+            await mongoose.connect(process.env.MONGO_URL)
             console.log("Successful connection to MongoDB");
         } catch (error) {
             console.error("Unable to connect to MongoDB")
