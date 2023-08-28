@@ -55,7 +55,8 @@ app.use(express.static(_dirname + "/public"))
 
 // const PORT = process.env.port || 8080;
 const db = config.DB
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT||9090;
+const connection = mongoose.connect(process.env.MONGO_URL)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
