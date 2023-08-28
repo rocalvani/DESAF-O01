@@ -54,9 +54,8 @@ const app = express();
 app.use(express.static(_dirname + "/public"))
 
 // const PORT = process.env.port || 8080;
-// const db = "mongodb+srv://admin:rocio1@cluster0.facejpa.mongodb.net/Ecommerce"
 const db = config.DB
-const PORT = config.port
+const PORT = config.port || 8080
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
